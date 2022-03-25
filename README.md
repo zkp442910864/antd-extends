@@ -52,6 +52,7 @@
 ### storybook 文档
 - [资料1](https://segmentfault.com/a/1190000041116905)
 - [官方文档](https://storybook.js.org/docs/react/writing-stories/introduction#using-args)
+- [命令配置项](https://storybook.js.org/docs/react/api/cli-options)
 
 
 ### 执行命令

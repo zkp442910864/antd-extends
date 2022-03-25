@@ -20,8 +20,7 @@
         "copy:less": "copyfiles -u 1 src/**/*.scoped.less lib/",
         "jest": "jest --passWithNoTests",
         "storybook": "start-storybook -p 6006",
-        "build-storybook": "build-storybook",
-        "build:docs": "gulp clean-docs && npm run build-storybook && node ./.storybook/renamed.js"
+        "build:docs": "build-storybook -o ./docs"
     },
     "main": "dist/index.js",
     "module": "es/tsc.js",
