@@ -21,3 +21,5 @@ babel.config.build.js
 tsconfig.json
 tsconfig.build.json
 README.md
+.env
+docs
