@@ -26,4 +26,3 @@ jobs:
       run: |
         npm install
         npm run build:docs
-        node ./.storybook/renamed.js
