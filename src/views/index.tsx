@@ -6,7 +6,7 @@ import {Select} from 'antd';
 // import MyModal, {createModalFn} from '@/components/MyModal';
 import {useStateDeep, jsCopy} from '@/utils';
 
-import './index.scoped.less';
+// import './index.scoped.less';
 
 
 const Home: FC = (props) => {

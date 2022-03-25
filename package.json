@@ -34,7 +34,7 @@
         "scoped-css-loader": "^1.0.0"
     },
     "dependencies": {
-        "antd": ">=3.0.0 || >=4.0.0",
+        "antd": "^3.0.0",
         "axios": "^0.21.1",
         "history": "^5.3.0",
         "moment": "^2.29.1",

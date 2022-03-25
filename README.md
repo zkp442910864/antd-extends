@@ -2,10 +2,9 @@
 
 ### 注意点
 ###### 样式需要安装依赖
-```json
-    // https://www.npmjs.com/package/scoped-css-loader?activeTab=readme
-    npm i babel-plugin-react-scoped-css scoped-css-loader -D
-
+[scoped-css-loader](https://www.npmjs.com/package/scoped-css-loader?activeTab=readme)
+`npm i babel-plugin-react-scoped-css scoped-css-loader -D`
+```
     // babel 中需要配置
     {
         plugins: [
