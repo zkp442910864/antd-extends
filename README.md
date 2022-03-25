@@ -2,7 +2,7 @@
 
 ### 注意点
 ###### 样式需要安装依赖
-[scoped-css-loader](https://www.npmjs.com/package/scoped-css-loader?activeTab=readme)
+[scoped-css-loader npm地址](https://www.npmjs.com/package/scoped-css-loader?activeTab=readme) <br />
 `npm i babel-plugin-react-scoped-css scoped-css-loader -D`
 ```
     // babel 中需要配置
@@ -19,7 +19,7 @@
         ],
     }
 ```
-```json
+```
     // webpack 中需要针对样式，增加处理器，放在 css-loader 后面
     {
         loader: 'scoped-css-loader',

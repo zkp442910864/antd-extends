@@ -5,9 +5,9 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/zkp442910864/webpack5-react/tree/antd-extends"
+        "url": "https://github.com/zkp442910864/antd-extends"
     },
-    "homepage": "https://zkp442910864.github.com/zkp442910864/webpack5-react/tree/antd-extends",
+    "homepage": "https://github.com/zkp442910864/antd-extends",
     "scripts": {
         "start": "webpack serve --env CUSTOM_NODE_ENV=development --mode=development --config config/index.js",
         "build": "webpack build --env CUSTOM_NODE_ENV=production --mode=production --config config/index.js",
