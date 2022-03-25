@@ -8,7 +8,7 @@ const path = require('path');
 // }
 
 try {
-    fs.renameSync(path.join(__dirname, '../storybook-static'), 'docs');
+    fs.renameSync(path.join(__dirname, '../storybook-static'), path.join(__dirname, '../docs'));
 } catch (error) {
     console.log(error);
 }
