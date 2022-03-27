@@ -25,7 +25,10 @@ export const deepProxy = <T extends TRData = any>(
     };
 
     // 不合适的数据类型都排除掉
-    if (!isCopyType(data)) return data;
+    if (!isCopyType(data)) {
+        mountData(data);
+        return data;
+    }
 
     // 匹配缓存数据
     const find = cache.find(ii => (ii.proxy === data || ii.rawObj === data || ii.data === data));
@@ -158,7 +161,20 @@ const deepRaw = (raw: any, rawKey: string | symbol, data: {[x: string]: any;}) =
 type TObj = {[key: string | number | symbol]: any};
 type TArr = any[];
 type TData = TObj | TArr;
-export type TRData = {_isProxy?: boolean, _raw?: any, _cache?: any} & TData;
+export type TRData = {
+    /**
+     * 代理标识
+     */
+    _isProxy?: boolean,
+    /**
+     * 原生数据
+     */
+    _raw?: any,
+    /**
+     * 缓存数据
+     */
+    _cache?: any
+} & TData;
 type TCbData = {
     target: TData;
     key: number | string | symbol;
