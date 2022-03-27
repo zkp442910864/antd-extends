@@ -51,12 +51,11 @@ export const isCopyType = (data: any) => {
             '[object Number]',
             '[object Boolean]',
             '[object String]',
-            '[object Date]',
         ].includes(Object.prototype.toString.call(data))
     ) return false;
 
     // 针对 moment 处理
-    if (typeof data === 'object' && data._isAMomentObject) return false;
+    if (data._isAMomentObject) return false;
 
     return true;
 };
@@ -66,13 +65,13 @@ export const isCopyType = (data: any) => {
  */
 export const specialType = <T extends object>(data: any) => {
 
-    if (data === null) return data as T;
+    if (data === null || typeof data !== 'object') return data as T;
 
-    if (typeof data === 'object' && Object.prototype.toString.call(data) === '[object Date]') {
+    if (Object.prototype.toString.call(data) === '[object Date]') {
         return new Date(data) as T;
     }
 
-    if (typeof data === 'object' && data._isAMomentObject) {
+    if (data._isAMomentObject) {
         return moment(data) as T;
     }
 
