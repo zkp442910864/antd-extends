@@ -7,22 +7,23 @@ import {IProps, TObj, TText} from './index.type';
 
 export * from './index.type';
 
-const AsyncTreeSelect: FC<IProps> = (props) => {
-    const {
-        dataField = {
-            titleKey: 'title',
-            valueKey: 'value',
-            childrenKey: 'children',
-        },
-        disabledRoot,
-        treeOptions,
-        value,
-        onChange,
-        multiple,
-        requestApi,
-        requestParams = {},
-        ...otherProps
-    } = props;
+const AsyncTreeSelect: FC<IProps> = ({
+    dataField = {
+        titleKey: 'title',
+        valueKey: 'value',
+        childrenKey: 'children',
+    },
+    showCheckedStrategy = 'SHOW_CHILD',
+    style = {},
+    disabledRoot,
+    treeOptions,
+    value,
+    onChange,
+    multiple,
+    requestApi,
+    requestParams = {},
+    ...otherProps
+}) => {
 
     let curOtherProps = {};
     const state = useStateDeep({
@@ -87,6 +88,7 @@ const AsyncTreeSelect: FC<IProps> = (props) => {
     const treeSelectFocus = async (e: any) => {
 
         if (e.target.tagName !== 'INPUT' && multiple) return;
+        if (!requestApi) return;
 
         if (state.loading || state.data.length || (treeOptions || []).length) {
             return;
@@ -97,7 +99,7 @@ const AsyncTreeSelect: FC<IProps> = (props) => {
         state.loading = true;
 
         try {
-            const res = await requestApi!(requestParams);
+            const res = await requestApi(requestParams);
             // const {data, cache} = tileData(res.data);
             // state.data = data;
             // state.treeData = data;
@@ -177,7 +179,8 @@ const AsyncTreeSelect: FC<IProps> = (props) => {
             autoClearSearchValue={false}
             notFoundContent={state.loading ? <Spin size="small" /> : checkData()}
             searchValue={state.searchText}
-            showCheckedStrategy={['SHOW_ALL', 'SHOW_PARENT', 'SHOW_CHILD'][2] as 'SHOW_CHILD'}
+            showCheckedStrategy={showCheckedStrategy || ['SHOW_ALL', 'SHOW_PARENT', 'SHOW_CHILD'][2] as 'SHOW_CHILD'}
+            style={Object.assign({minWidth: 100}, style)}
             treeData={state.treeData}
             value={value}
             onChange={change}

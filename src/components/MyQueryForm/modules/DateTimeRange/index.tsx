@@ -8,17 +8,16 @@ import {useStateDeep, useDebounceEffect, empty, jsCopy} from '../../../../utils'
 
 export * from './index.type';
 
-const DateTimeRange: FC<IProps> = (props) => {
-    const {
-        startDateTimeStr,
-        endDateTimeStr,
-        onChange,
-        showFormat = 'YYYY-MM-DD HH:mm:ss',
-        dateFormat = 'YYYY-MM-DD HH:mm:ss',
-        showTime,
-        // showTimeFormat = 'HH:mm:ss',
-        ...otherProps
-    } = props;
+const DateTimeRange: FC<IProps> = ({
+    startDateTimeStr,
+    endDateTimeStr,
+    onChange,
+    showFormat = 'YYYY-MM-DD HH:mm:ss',
+    dateFormat = 'YYYY-MM-DD HH:mm:ss',
+    showTime,
+    // showTimeFormat = 'HH:mm:ss',
+    ...otherProps
+}) => {
 
     const timeFormat = showFormat.split(' ')[1];
 

@@ -29,7 +29,7 @@ export const useStateDeep = <T>(val: T, cb?: TCb) => {
         });
     }, []);
 
-    return proxy;
+    return proxy as T & TRData;
 };
 
 

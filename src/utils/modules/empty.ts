@@ -3,6 +3,11 @@
 
 // 判断是否空
 
+// interface IEmpty<T = any> {
+//     (val: '' | null | undefined): true;
+//     (val: NonNullable<T>): false;
+// }
+
 function empty2 (val: '' | null | undefined): true;
 function empty2 (val: any): false;
 function empty2 (val: any) {

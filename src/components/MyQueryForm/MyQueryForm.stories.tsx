@@ -455,7 +455,7 @@ export const TConfigTypeFn = createTypeFn<TConfigType>();
 export const MyQueryFormRefFn = createTypeFn<MyQueryFormRef>();
 
 export default {
-    title: 'Example/MyQueryForm(查询表单',
+    title: '组件/MyQueryForm(查询表单',
     component: MyQueryForm,
     parameters: {
         docs: {

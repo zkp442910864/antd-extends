@@ -35,6 +35,6 @@ export const useRequire = <S extends TObj = any, E extends TObj = any>(requireAp
         });
     };
 
-    return [run, load, res, err];
+    return [run, load, res, err] as [TRequireApi, boolean, S, E];
 };
 

@@ -9,7 +9,7 @@ import {useStateDeep} from '../../utils';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-    title: 'Example/MyModal(弹窗',
+    title: '组件/MyModal(弹窗',
     component: MyModal,
     parameters: {
         // componentSubtitle: '使用方式和 antd Modal 一样',

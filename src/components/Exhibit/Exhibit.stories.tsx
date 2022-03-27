@@ -8,7 +8,7 @@ import {useStateDeep} from '../../utils';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-    title: 'Example/Exhibit(显示-隐藏',
+    title: '组件/Exhibit(显示-隐藏',
     component: Exhibit,
     parameters: {
         docs: {

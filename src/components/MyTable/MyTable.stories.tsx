@@ -406,7 +406,7 @@ export const IColumnFn = createTypeFn<IColumn<object>>();
 export const TableRefFn = createTypeFn<TableRef>();
 
 export default {
-    title: 'Example/MyTable(表格',
+    title: '组件/MyTable(表格',
     component: MyTable,
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
     argTypes: {},

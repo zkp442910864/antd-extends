@@ -88,19 +88,19 @@ const useLoad = (requestApi: TRequestApi, requestParams: TObj, valueKey: string)
     };
 };
 
-const AsyncSelect: FC<IProps> = (props) => {
+const AsyncSelect: FC<IProps> = ({
+    valueKey = 'value',
+    textKey = 'title',
+    dataType = 'static',
+    requestParams = {},
+    style = {},
+    options,
+    requestApi,
+    onChange,
+    value,
+    ...otherProps
+}) => {
 
-    const {
-        options,
-        requestApi,
-        requestParams = {},
-        valueKey = 'value',
-        textKey = 'title',
-        dataType = 'static',
-        onChange,
-        value,
-        ...otherProps
-    } = props;
 
     const {list, cache, selectProps, loading, ajacList} = (() => {
         const map = {
@@ -173,6 +173,7 @@ const AsyncSelect: FC<IProps> = (props) => {
             {...otherProps}
             {...selectProps}
             notFoundContent={loading ? <Spin size="small" /> : checkData()}
+            style={Object.assign({minWidth: 100}, style)}
             value={value}
             onChange={change}
             onFocus={ajacList}

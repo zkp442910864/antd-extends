@@ -4,7 +4,7 @@ export type TObj = {[key: string]: any};
 export type TText = string | number;
 export type TRequestApi = (params?: TObj) => Promise<{data: TObj[]}>;
 
-export interface IProps extends Omit<TreeSelectProps<any>, 'onChange'> {
+export interface IProps extends Omit<TreeSelectProps<any>, 'onChange' | 'treeData'> {
     /**
      * 树形数据
      */
