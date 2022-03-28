@@ -32,13 +32,13 @@ export const UseDebounceEffect = () => {
     const [after, setAfter] = useState(0);
 
     useDebounceEffect(() => {
-        // console.log(val);
+        console.log('useDebounceEffect', val);
         setAfter(val);
 
         return () => {
             console.log('destory');
         };
-    }, [val], 1000, true);
+    }, [val], 1000, false);
 
     return (
         <div>

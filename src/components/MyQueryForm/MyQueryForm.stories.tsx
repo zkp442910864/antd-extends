@@ -450,6 +450,78 @@ ICustom.args = {
 };
 ICustom.storyName = '9.自定义内容';
 
+export const InSeriesForm = () => {
+    return (
+        <MyQueryForm
+            config={[
+                {
+                    type: 'custom',
+                    render: (params) => {
+                        return (
+                            <Input value={params.ssss} onChange={(e) => (params.ssss = e.target.value)} />
+                        );
+                    },
+                },
+                {
+                    type: 'groupSelectDateTimeRange',
+                    vmodel: ['val4', 'val5', 'val6'],
+                    label: '123333',
+                    options: [
+                        {title: 'asdf', value: 1},
+                        {title: 'asdf2', value: 2},
+                        {title: 'asdf3', value: 3},
+                    ],
+                    textKey: 'title',
+                    clearable: false,
+                    valueKey: 'value',
+                    itemWidth: '60%',
+                    width: [100],
+                },
+            ]}
+            initParams={{
+                val4: 1,
+                eee: 22,
+            }}
+            lastFn={(params) => {
+                return (
+                    <MyQueryForm
+                        config={[
+                            {
+                                type: 'custom',
+                                render: (params) => {
+                                    return (
+                                        <Input value={params.qwe4} onChange={(e) => (params.qwe4 = e.target.value)} />
+                                    );
+                                },
+                            },
+                            {
+                                type: 'groupSelectDateTimeRange',
+                                vmodel: ['qwe', 'qwe2', 'qwe3'],
+                                label: '123333',
+                                options: [
+                                    {title: 'asdf', value: 1},
+                                    {title: 'asdf2', value: 2},
+                                    {title: 'asdf3', value: 3},
+                                ],
+                                textKey: 'title',
+                                clearable: false,
+                                valueKey: 'value',
+                                itemWidth: '60%',
+                                width: [100],
+                            },
+                        ]}
+                        externalParams={params}
+                        formBox={false}
+                        hideAllBtn={true}
+                    />
+                );
+            }}
+            onSubmit={(...arg) => console.log(arg)}
+        />
+    );
+};
+InSeriesForm.storyName = '10.串联表单';
+
 
 export const TConfigTypeFn = createTypeFn<TConfigType>();
 export const MyQueryFormRefFn = createTypeFn<MyQueryFormRef>();

@@ -17,6 +17,20 @@ export interface MyQueryFormRef {
 
 export interface IProps {
     /**
+     * 使用 from 标签
+     */
+    formBox?: boolean;
+    /**
+     * 隐藏按钮部分的 formItem
+     */
+    hideAllBtn?: boolean;
+    /**
+     * 引入外部的 params
+     *
+     * 实现串联 queryForm 功能
+     */
+    externalParams?: TObj;
+    /**
      * 初始化值
      */
     initParams?: TObj;

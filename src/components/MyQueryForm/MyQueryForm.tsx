@@ -50,6 +50,9 @@ const MyQueryForm: FC<IProps> = forwardRef((
         handlePlaceholder = globalConfig.queryHandlePlaceholder,
         hideResetBtn = false,
         loading = false,
+        formBox = true,
+        hideAllBtn = false,
+        externalParams,
         initParams,
         onReset,
         onSubmit,
@@ -356,6 +359,8 @@ const MyQueryForm: FC<IProps> = forwardRef((
     };
 
     const renderBtnBox = (disabledFloat?: boolean) => {
+        if (hideAllBtn) return (<></>);
+
         return (
             <FormItem className="btn-box" style={{float: disabledFloat ? 'initial' : 'right'}}>
                 <Spin delay={200} indicator={<></>} spinning={loading}>
@@ -393,33 +398,9 @@ const MyQueryForm: FC<IProps> = forwardRef((
         }, 0);
     };
 
-
-    // 初始化值
-    useEffect(() => {
-        state.params = jsCopy(initParams || {});
-    }, []);
-
-    useImperativeHandle(ref, () => {
-        const obj: MyQueryFormRef = {
-            getFormData: () => {
-                return jsCopy(state.params);
-            },
-            setFormData: (newParams: TObj) => {
-                state.params = jsCopy(newParams);
-            },
-        };
-
-        return obj;
-    });
-
-    return (
-        <>
-            <Form
-                className="zzzz-form-box"
-                layout="inline"
-                // onFinish={submit}
-                // onSubmit={submit}
-            >
+    const content = () => {
+        return (
+            <>
                 {btnLocal === 'rightTop' ? renderBtnBox() : ''}
                 {formItemBeforeFn?.(state.params)}
                 {configToJsx()}
@@ -438,7 +419,55 @@ const MyQueryForm: FC<IProps> = forwardRef((
                         )
                         : ''
                 }
-            </Form>
+            </>
+        );
+    };
+
+
+    // 初始化值
+    useEffect(() => {
+        if (externalParams) {
+            state.params = externalParams;
+        } else {
+            state.params = jsCopy(initParams || {});
+        }
+    }, []);
+
+    // 同步外部的 params
+    useDebounceEffect(() => {
+        if (externalParams) {
+            state.params = externalParams;
+        }
+    }, [externalParams], 0, false);
+
+    useImperativeHandle(ref, () => {
+        const obj: MyQueryFormRef = {
+            getFormData: () => {
+                return jsCopy(state.params);
+            },
+            setFormData: (newParams: TObj) => {
+                state.params = jsCopy(newParams);
+            },
+        };
+
+        return obj;
+    });
+
+    return (
+        <>
+            {
+                formBox
+                    ? (
+                        <Form className="zzzz-form-box" layout="inline">
+                            {content()}
+                        </Form>
+                    )
+                    : (
+                        <div className="zzzz-form-box">
+                            {content()}
+                        </div>
+                    )
+            }
         </>
     );
 });
