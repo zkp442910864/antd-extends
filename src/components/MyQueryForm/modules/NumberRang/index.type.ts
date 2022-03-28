@@ -6,11 +6,11 @@ export interface IProps extends Omit<InputNumberProps, 'onChange'> {
     /**
      * 小值
      */
-    minValue?: number;
+    minValue?: number | string;
     /**
      * 大值
      */
-    maxValue?: number;
+    maxValue?: number | string;
     /**
      * 回调
      */

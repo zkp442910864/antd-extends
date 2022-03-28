@@ -23,14 +23,19 @@ const NumberRang: FC<IProps> = ({
 
     // const state = useStateDeep({});
 
+    const toNum = (val: number | string | undefined) => {
+        if (typeof val === 'undefined' || val === '') return undefined;
+        return +val;
+    };
+
     const change = (key: string, value?: number) => {
         const arr: Array<number | undefined> = [];
 
         if (key === 'minValue') {
             arr.push(value);
-            arr.push(maxValue);
+            arr.push(toNum(maxValue));
         } else {
-            arr.push(minValue);
+            arr.push(toNum(minValue));
             arr.push(value);
         }
 
@@ -42,8 +47,8 @@ const NumberRang: FC<IProps> = ({
 
         if (empty(minValue) || empty(maxValue)) return;
 
-        if (minValue! > maxValue!) {
-            onChange?.(maxValue, minValue);
+        if (+minValue! > +maxValue!) {
+            onChange?.(+maxValue!, +minValue!);
         }
     };
 
@@ -57,7 +62,7 @@ const NumberRang: FC<IProps> = ({
                 min={valueRang ? valueRang[0] : undefined}
                 placeholder={minPlaceholder}
                 precision={precision}
-                value={minValue}
+                value={toNum(minValue)}
                 onBlur={blur}
                 onChange={(e) => change('minValue', e)}
             />
@@ -69,7 +74,7 @@ const NumberRang: FC<IProps> = ({
                 min={valueRang ? valueRang[0] : undefined}
                 placeholder={maxPlaceholder}
                 precision={precision}
-                value={maxValue}
+                value={toNum(maxValue)}
                 onBlur={blur}
                 onChange={(e) => change('maxValue', e)}
             />
