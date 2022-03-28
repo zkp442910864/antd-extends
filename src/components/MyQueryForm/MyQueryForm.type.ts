@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {IProps as NumberRangProps} from './modules/NumberRang';
+
 export type TObj = {[key: string]: any};
 export type TText = string | number;
 export type TBtnLocal = 'default' | 'rightTop' | 'rightBottom';
@@ -157,7 +159,7 @@ export interface IConfigBase {
     /**
      * 样式
      */
-    style?: TObj;
+    style?: React.CSSProperties;
 }
 
 
@@ -296,8 +298,21 @@ export interface ICCustom extends Omit<IConfigBase, 'vmodel'>{
     render: (params: TObj) => JSX.Element;
 }
 
+export interface ICNumberRang extends IConfigBase{
+    /**
+     * 输入总长度
+     */
+    type: 'numberRang';
+    vmodel: [string, string];
+    /**
+     * 精度
+     */
+    precision?: number;
+}
+
+
 export type TCMapfn = <T extends IConfigBase = IConfigBase, K extends TObj = TObj>(item: T, otherAttr: K) => JSX.Element;
 
 export type TCFn = (params: TObj) => JSX.Element;
 
-export type TConfigType = ICInput | ICSelect | ICSelectLoad | ICTreeSelect | ICDateTimeRange | ICGroupSelectInput | ICGroupSelectDateTimeRange | ICCustom;
+export type TConfigType = ICInput | ICSelect | ICSelectLoad | ICTreeSelect | ICDateTimeRange | ICGroupSelectInput | ICGroupSelectDateTimeRange | ICCustom | ICNumberRang;

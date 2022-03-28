@@ -4,10 +4,11 @@ import {ButtonProps} from 'antd/lib/button';
 import {InputProps} from 'antd/lib/input';
 import moment from 'moment';
 
-import {AsyncSelect, DateTimeRange, AsyncTreeSelect} from './modules';
+import {AsyncSelect, DateTimeRange, AsyncTreeSelect, NumberRang} from './modules';
 import {IProps as AsyncSelectProps} from './modules/AsyncSelect';
 import {IProps as DateTimeRangeProps} from './modules/DateTimeRange';
 import {IProps as AsyncTreeSelectProps} from './modules/AsyncTreeSelect';
+import {IProps as NumberRangProps} from './modules/NumberRang';
 
 import globalConfig from '../config';
 import Exhibit from '../Exhibit';
@@ -28,6 +29,7 @@ import {
     MyQueryFormRef,
     TConfigType,
     ICCustom,
+    ICNumberRang,
 } from './MyQueryForm.type';
 import './MyQueryForm.scoped.less';
 
@@ -160,6 +162,11 @@ const MyQueryForm: FC<IProps> = forwardRef((
                     allowClear={!!item.clearable}
                     placeholder={handle.placeholder(item)}
                     style={handle.width(item.width)}
+                    onBlur={(e) => {
+                        const data = item as ICInput;
+                        const str = e.target.value || '';
+                        handle.itemChange(str.trim(), data.vmodel, [e, data]);
+                    }}
                     {...otherAttr}
                 />
             ),
@@ -182,6 +189,14 @@ const MyQueryForm: FC<IProps> = forwardRef((
                 <AsyncTreeSelect
                     allowClear={!!item.clearable}
                     placeholder={handle.placeholder(item)}
+                    style={handle.width(item.width)}
+                    {...otherAttr}
+                />
+            ),
+            numberRang: (item, otherAttr) => (
+                <NumberRang
+                    // allowClear={!!item.clearable}
+                    // placeholder={handle.placeholder(item)}
                     style={handle.width(item.width)}
                     {...otherAttr}
                 />
@@ -350,6 +365,22 @@ const MyQueryForm: FC<IProps> = forwardRef((
                             }
                         </InputGroup>
                     ),
+                );
+                domList.push(dom);
+            } else if (handle.judgeShow('numberRang', data)) {
+                // 数值 范围框
+                const item = data as ICNumberRang;
+                const dom = renderFormItem(
+                    item,
+                    map.numberRang<ICNumberRang, NumberRangProps>(item, {
+                        precision: item.precision,
+                        minValue: state.params[item.vmodel[0]],
+                        maxValue: state.params[item.vmodel[1]],
+                        onChange: (min, max) => {
+                            handle.itemChange(min, item.vmodel[0], [{min, max}, item]);
+                            handle.itemChange(max, item.vmodel[1], [{min, max}, item]);
+                        },
+                    }),
                 );
                 domList.push(dom);
             }

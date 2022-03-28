@@ -522,6 +522,21 @@ export const InSeriesForm = () => {
 };
 InSeriesForm.storyName = '10.串联表单';
 
+export const NumberRang = Template.bind({});
+NumberRang.args = {
+    config: [
+        {
+            type: 'numberRang',
+            vmodel: ['aaa1', 'aaa2'],
+            label: '范围输入框',
+            change: (...q) => {console.log(...q);},
+            itemWidth: '50%',
+            precision: 2,
+        },
+    ],
+};
+NumberRang.storyName = '11.范围输入框';
+
 
 export const TConfigTypeFn = createTypeFn<TConfigType>();
 export const MyQueryFormRefFn = createTypeFn<MyQueryFormRef>();
