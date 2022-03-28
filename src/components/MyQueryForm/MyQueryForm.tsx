@@ -445,8 +445,11 @@ const MyQueryForm: FC<IProps> = forwardRef((
             getFormData: () => {
                 return jsCopy(state.params);
             },
-            setFormData: (newParams: TObj) => {
+            setFormData: (newParams) => {
                 state.params = jsCopy(newParams);
+            },
+            resetFormData: (newParams) => {
+                state.params = jsCopy(Object.assign({}, initParams || {}, newParams || {}));
             },
         };
 

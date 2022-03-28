@@ -13,6 +13,14 @@ export interface MyQueryFormRef {
      * 设置数据进入表单
      */
     setFormData: (newParams: TObj) => void;
+    /**
+     * 重置表单参数
+     *
+     * 不传，使用 initParams
+     *
+     * 传了，合并 Object.assign(initParams, newParams)
+     */
+    resetFormData: (newParams?: TObj) => void;
 }
 
 export interface IProps {

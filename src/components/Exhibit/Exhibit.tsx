@@ -23,7 +23,7 @@ const packComponent = <T extends TObj = TObj>(Com: any) => {
         } = props;
 
         if (!rShow) {
-            style.display = 'none';
+            style.display = 'none !important';
         }
 
         return (
