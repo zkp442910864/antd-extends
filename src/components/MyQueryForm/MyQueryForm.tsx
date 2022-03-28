@@ -12,6 +12,7 @@ import {IProps as NumberRangProps} from './modules/NumberRang';
 
 import globalConfig from '../config';
 import Exhibit from '../Exhibit';
+import {spinHoc} from '../HOC';
 import {useStateDeep, useDebounceEffect, empty, jsCopy} from '../../utils';
 import {
     IProps,
@@ -41,6 +42,7 @@ export * from './MyQueryForm.type';
 const NewButton = Exhibit.packComponent<ButtonProps>(Button);
 const InputGroup = Input.Group;
 const FormItem = Form.Item;
+const FormItemLoad = spinHoc(Form.Item, {}, 'inline');
 
 
 const MyQueryForm: FC<IProps> = forwardRef((
@@ -393,24 +395,28 @@ const MyQueryForm: FC<IProps> = forwardRef((
         if (hideAllBtn) return (<></>);
 
         return (
-            <FormItem className="btn-box" style={{float: disabledFloat ? 'initial' : 'right'}}>
-                <Spin delay={200} indicator={<></>} spinning={loading}>
-                    <NewButton
-                        htmlType="submit"
-                        type="primary"
-                        onClick={submit}
-                    >
-                        {submitText}
-                    </NewButton>
-                    <NewButton
-                        rIf={!hideResetBtn}
-                        onClick={reset}
-                    >
-                        {resetText}
-                    </NewButton>
-                    {btnExtendFn?.()}
-                </Spin>
-            </FormItem>
+            <FormItemLoad
+                className="btn-box"
+                delay={200}
+                indicator={<></>}
+                spinning={loading}
+                style={{float: disabledFloat ? 'initial' : 'right'}}
+            >
+                <NewButton
+                    htmlType="submit"
+                    type="primary"
+                    onClick={submit}
+                >
+                    {submitText}
+                </NewButton>
+                <NewButton
+                    rIf={!hideResetBtn}
+                    onClick={reset}
+                >
+                    {resetText}
+                </NewButton>
+                {btnExtendFn?.()}
+            </FormItemLoad>
         );
     };
 
