@@ -4,7 +4,7 @@ import {ButtonProps} from 'antd/lib/button';
 import {InputProps} from 'antd/lib/input';
 import moment from 'moment';
 
-import {AsyncSelect, DateTimeRange, AsyncTreeSelect, NumberRang} from './modules';
+import {AsyncSelect, DateTimeRange, AsyncTreeSelect, NumberRang, InputTrim} from './modules';
 import {IProps as AsyncSelectProps} from './modules/AsyncSelect';
 import {IProps as DateTimeRangeProps} from './modules/DateTimeRange';
 import {IProps as AsyncTreeSelectProps} from './modules/AsyncTreeSelect';
@@ -160,15 +160,15 @@ const MyQueryForm: FC<IProps> = forwardRef((
         // jsx 映射
         const map: {[key: string]: TCMapfn} = {
             input: (item, otherAttr) => (
-                <Input
+                <InputTrim
                     allowClear={!!item.clearable}
                     placeholder={handle.placeholder(item)}
                     style={handle.width(item.width)}
-                    onBlur={(e) => {
-                        const data = item as ICInput;
-                        const str = e.target.value || '';
-                        handle.itemChange(str.trim(), data.vmodel, [e, data]);
-                    }}
+                    // onBlur={(e) => {
+                    //     const data = item as ICInput;
+                    //     const str = e.target.value || '';
+                    //     handle.itemChange(str.trim(), data.vmodel, [e, data]);
+                    // }}
                     {...otherAttr}
                 />
             ),
@@ -225,7 +225,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
                     map.input<ICInput, InputProps>(item, {
                         maxLength: item.maxLength,
                         value: state.params[item.vmodel],
-                        onChange: (e) => handle.itemChange(e.target.value, item.vmodel, [e, item]),
+                        onChange: (e) => handle.itemChange(e, item.vmodel, [e, item]),
                     }),
                 );
                 domList.push(dom);
@@ -325,7 +325,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
                                     maxLength: item.maxLength,
                                     style: handle.width(item.width[1]),
                                     value: state.params[item.vmodel[1]],
-                                    onChange: (e) => handle.itemChange(e.target.value, item.vmodel[1], [e, item]),
+                                    onChange: (e) => handle.itemChange(e, item.vmodel[1], [e, item]),
                                 })
                             }
                         </InputGroup>
