@@ -1,1 +1,1 @@
-export * from './spinHoc';
+export {spinHoc} from './spinHoc';
