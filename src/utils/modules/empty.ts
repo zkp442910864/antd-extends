@@ -19,6 +19,18 @@ function empty2 (val: any) {
 
 export const empty = empty2;
 
+export const emptyArray = (val: any) => {
+    if (empty(val)) return true;
+    if (!Array.isArray(val)) {
+        console.error('判断数据，不为数组，请注意');
+        return true;
+    }
+
+    if (!val.length) return true;
+
+    return false;
+};
+
 // export {empty};
 // export const empty: empty1 = (val) => {
 //     // const jVal: undefined | null | '' = val;
