@@ -1,100 +1,92 @@
 import {empty, emptyArray} from './empty';
 import globalConfig from '../config';
 
-export default function checkValFun () {
+class CheckVal implements ICheckValObj {
+    // eslint-disable-next-line no-undef
+    [key: string]: any | TAddRuleFn;
 
-    class CheckVal implements ICheckValObj {
-        // eslint-disable-next-line no-undef
-        [key: string]: any | TAddRuleFn;
+    showToast = false;
+    checkErrArr: TKeyOrErr[] = [];
+    emptyKey: TKeyOrErr = {};
 
-        showToast = false;
-        checkErrArr: TKeyOrErr[] = [];
-        emptyKey: TKeyOrErr = {};
-
-        constructor (emptyKey = {}, showToast = true) {
-            // super();
-            this.emptyKey = emptyKey;
-            this.showToast = showToast;
-        }
-
-        getErrorInfo (): TKeyOrErr[] {
-            return this.checkErrArr;
-        }
-
-        // 获取对应的值
-        getVal (data: IOBJ, key: string) {
-            let val = data;
-            const arrKey = key.split('.');
-
-            try {
-                arrKey.forEach((aKey) => {
-                    val = val[aKey];
-                });
-            } catch (error) {
-                // console.log(error, '数据结构有问题，找不到指定数据');
-                // throw new Error('数据结构有问题，找不到指定数据');
-                return '';
-            }
-
-            return val;
-        }
-
-        run (data: IOBJ): boolean {
-            const emptyKey = this.emptyKey;
-            const arr: TKeyOrErr[] = [];
-            // debugger;
-
-            Object.keys(emptyKey).forEach((key) => {
-                const val = this.getVal(data, key);
-                let text = '';
-
-                if (emptyKey[key] && empty(val)) {
-                    text = emptyKey[key];
-                } else if (emptyKey[key] && Array.isArray(val) && emptyArray(val)) {
-                    text = emptyKey[key];
-                } else if (typeof this[key] === 'function') {
-                    text = this[key](val, data);
-                }
-
-                text && arr.push({key, text});
-            });
-            // console.log(arr);
-
-            this.checkErrArr = arr;
-            return this.handleInfo(arr);
-        }
-
-        handleInfo (arr: IOBJ[]): boolean {
-            const text = (arr[0] || {}).text || '';
-            this.showToast && text && this.toast(text);
-            return !!text;
-        }
-
-        _addRule (key: string, fn: TAddRuleFn): void {
-            this[key] = fn;
-        }
-
-        toast (text: string) {
-            globalConfig.toast(text);
-        }
-
-        // bankCard (val: string): string {
-        //     return !/^([1-9]{1})(\d{15}|\d{18})$/.test(val) ? '请输入正确银行卡号' : '';
-        // }
-
-        // phone (val: string): string {
-        //     return !/^1[0-9]{10}$/.test(val) ? '请输入正确手机号' : '';
-        // }
-
-        // idCard (val: string): string {
-        //     return !/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(val) ? '请输入正确的身份证号' : '';
-        // }
+    constructor (emptyKey = {}, showToast = true) {
+        // super();
+        this.emptyKey = emptyKey;
+        this.showToast = showToast;
     }
 
-    return (emptyKey: IOBJ, showToast?: boolean) => {
-        const check = new CheckVal(emptyKey, showToast);
-        return check;
-    };
+    getErrorInfo (): TKeyOrErr[] {
+        return this.checkErrArr;
+    }
+
+    // 获取对应的值
+    getVal (data: IOBJ, key: string) {
+        let val = data;
+        const arrKey = key.split('.');
+
+        try {
+            arrKey.forEach((aKey) => {
+                val = val[aKey];
+            });
+        } catch (error) {
+            // console.log(error, '数据结构有问题，找不到指定数据');
+            // throw new Error('数据结构有问题，找不到指定数据');
+            return '';
+        }
+
+        return val;
+    }
+
+    run (data: IOBJ): boolean {
+        const emptyKey = this.emptyKey;
+        const arr: TKeyOrErr[] = [];
+        // debugger;
+
+        Object.keys(emptyKey).forEach((key) => {
+            const val = this.getVal(data, key);
+            let text = '';
+
+            if (emptyKey[key] && empty(val)) {
+                text = emptyKey[key];
+            } else if (emptyKey[key] && Array.isArray(val) && emptyArray(val)) {
+                text = emptyKey[key];
+            } else if (typeof this[key] === 'function') {
+                text = this[key](val, data);
+            }
+
+            text && arr.push({key, text});
+        });
+        // console.log(arr);
+
+        this.checkErrArr = arr;
+        return this.handleInfo(arr);
+    }
+
+    handleInfo (arr: IOBJ[]): boolean {
+        const text = (arr[0] || {}).text || '';
+        this.showToast && text && this.toast(text);
+        return !!text;
+    }
+
+    _addRule (key: string, fn: TAddRuleFn): void {
+        this[key] = fn;
+    }
+
+    toast (text: string) {
+        globalConfig.toast(text);
+    }
+
+    // bankCard (val: string): string {
+    //     return !/^([1-9]{1})(\d{15}|\d{18})$/.test(val) ? '请输入正确银行卡号' : '';
+    // }
+
+    // phone (val: string): string {
+    //     return !/^1[0-9]{10}$/.test(val) ? '请输入正确手机号' : '';
+    // }
+
+    // idCard (val: string): string {
+    //     return !/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(val) ? '请输入正确的身份证号' : '';
+    // }
 }
 
 /**
@@ -103,7 +95,10 @@ export default function checkValFun () {
  * @param showToast 是否显示提示 默认true
  * @returns 检验对象
  */
-export const createdCheckVal: TCheckValFun = checkValFun();
+export const createdCheckVal: TCheckValFn = (emptyKey: IOBJ, showToast?: boolean) => {
+    const check = new CheckVal(emptyKey, showToast);
+    return check;
+};
 
 
 interface IOBJ {
@@ -179,4 +174,4 @@ export interface ICheckValObj {
     // idCard (val: string): string;
 }
 
-export type TCheckValFun = (emptyKey: TKeyOrErr, showToast?: boolean) => ICheckValObj;
+export type TCheckValFn = (emptyKey: TKeyOrErr, showToast?: boolean) => ICheckValObj;
