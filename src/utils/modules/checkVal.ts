@@ -99,7 +99,7 @@ export default function checkValFun () {
 
 /**
  * 创建检验对象
- * @param emptyKey {[key: string]: string}
+ * @param emptyKey 对象 {[key: string]: string}
  * @param showToast 是否显示提示 默认true
  * @returns 检验对象
  */
