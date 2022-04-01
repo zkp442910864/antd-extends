@@ -1,7 +1,7 @@
 {
     "name": "@zzzz-/react-antd-extends",
     "description": "antd 组件二次封装",
-    "version": "0.0.45",
+    "version": "0.0.46",
     "license": "MIT",
     "repository": {
         "type": "git",
