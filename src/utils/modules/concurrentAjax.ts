@@ -2,7 +2,16 @@
 export type TTaskItem = Promise<string>;
 export type TConcurrentAjaxDataItem = () => Promise<void>;
 export type TConcurrentAjaxData = TConcurrentAjaxDataItem[];
-export type TConcurrentAjaxClose = () => void;
+export type TConcurrentAjaxClose = {
+    /**
+     * 开始执行
+     */
+    start: () => void;
+    /**
+     * 停止执行
+     */
+    stop: () => void;
+};
 export type TConcurrentAjax = (data: TConcurrentAjaxData, concurrentNum?: number) => TConcurrentAjaxClose;
 
 /**
@@ -63,10 +72,13 @@ export const concurrentAjax: TConcurrentAjax = (data, concurrentNum = 5) => {
         }, 100);
     };
 
-    pushTask();
-    run();
-
-    return () => {
-        end = true;
+    return {
+        start: () => {
+            pushTask();
+            run();
+        },
+        stop: () => {
+            end = true;
+        },
     };
 };

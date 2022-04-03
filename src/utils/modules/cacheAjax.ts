@@ -6,7 +6,7 @@
 import {jsCopy} from './jsCopy';
 
 
-export default class CacheAjax<T extends IOBJ = IOBJ, K extends IOptions = IOBJ, J extends IReturnData = IOBJ> {
+class CacheAjax<T extends IOBJ = IOBJ, K extends IOptions = IOBJ, J extends IReturnData = IOBJ> {
     private promiseAjax: IMyPromiseAjax<T, K, J>;
     private cacheMax: number;
     private cacheData: IMyCacheData;
@@ -70,7 +70,7 @@ export default class CacheAjax<T extends IOBJ = IOBJ, K extends IOptions = IOBJ,
     }
 
     // 执行
-    run (params: T, options: K) {
+    run (params: T, options: K & IOptions) {
         return new Promise((rel, rej) => {
             // debugger;
             const key = this.createKey(params);
@@ -107,6 +107,11 @@ export default class CacheAjax<T extends IOBJ = IOBJ, K extends IOptions = IOBJ,
     }
 }
 
+export const createdCacheAjax: TCreatedCacheAjax = (promiseAjax, cacheMax?: number) => {
+    const cache = new CacheAjax(promiseAjax, cacheMax);
+    return cache;
+};
+
 
 interface IOBJ {
     [key: string]: any;
@@ -138,4 +143,7 @@ export interface IMyCacheData {
 }
 
 export type IMyPromiseAjax<T extends IOBJ, K extends IOptions, J> = (params: T, options: K) => Promise<J & IReturnData>;
+
+export type TCreatedCacheAjax<T extends IOBJ = IOBJ, K extends IOptions = IOBJ, J extends IReturnData = IOBJ> =
+    (promiseAjax: IMyPromiseAjax<T, K, J>, cacheMax?: number) => CacheAjax<T, K, J>;
 
