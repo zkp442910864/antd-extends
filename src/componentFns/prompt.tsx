@@ -10,7 +10,7 @@ const Prompt: FC<IPrompt & IPropsModalFn & IMyModalProps> = ({
     afterClose,
     yes,
     no,
-    customCheckFn,
+    customFn,
     customJSX,
     inputProps,
     ...modalProps
@@ -18,6 +18,7 @@ const Prompt: FC<IPrompt & IPropsModalFn & IMyModalProps> = ({
 
     const state = useStateDeep({
         open: true,
+        loading: false,
         value: '',
         otherData: null as any,
     });
@@ -28,27 +29,38 @@ const Prompt: FC<IPrompt & IPropsModalFn & IMyModalProps> = ({
     };
 
     const commit = async () => {
+        if (state.loading) return;
+
         const value = state.value;
         const otherData = state.otherData?._raw;
+        let res: any;
 
-        if (customCheckFn) {
-            await customCheckFn(value);
+        if (customFn) {
+            try {
+                state.loading = true;
+                res = await customFn(value, otherData);
+            } catch (error) {
+                state.loading = false;
+                // throw error;
+                return;
+            }
         } else if (empty(value)) {
             toast('请输入', 2);
             return;
         }
 
-        yes?.({value, otherData});
+        yes?.({value, otherData, res});
         state.open = false;
     };
 
     return (
         <MyModal
-            hideModalCloseBtn={true}
+            closable={false}
             maskClosable={false}
             width={500}
             {...modalProps}
             afterClose={afterClose}
+            confirmLoading={state.loading}
             visible={state.open}
             onCancel={() => {
                 state.open = false;
@@ -81,8 +93,18 @@ export const promptFn = createModalFn<IPrompt & IMyModalProps, TReturnValue>(Pro
 export type TChange = (newValue: TValue, ...arg: any) => void;
 export type TValue = any;
 export type TReturnValue = {
+    /**
+     * 输入框的值
+     */
     value: TValue,
+    /**
+     * 附带的其他参数
+     */
     otherData: any[],
+    /**
+     * 当 customFn 中有返回值的时候，会有值
+     */
+    res: any;
 };
 
 export interface IPrompt {
@@ -95,9 +117,11 @@ export interface IPrompt {
      */
     customJSX?: (value: TValue, change: TChange) => JSX.Element,
     /**
-     * 自定义检验函数
+     * 自定义异步函数
      *
-     * 通过 返回 Promise.reject() 来报错
+     * 可以用来校验，通过 return Promise.reject() 来阻断执行
+     *
+     * 也可以做请求处理，默认会开启loading
      */
-    customCheckFn?: (value: TValue) => Promise<any>;
+    customFn?: (value: TValue, otherArg: any[]) => Promise<any>;
 }

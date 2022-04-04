@@ -22,8 +22,11 @@ const MyModal: FC<IProps> = (props) => {
         width,
         visible,
         centered,
-        className,
-        hideModalCloseBtn,
+        keyboard,
+        maskClosable,
+        closable,
+        loadingDisableClose,
+        cancelButtonProps,
         ...modalProps
     } = props;
 
@@ -93,6 +96,28 @@ const MyModal: FC<IProps> = (props) => {
         },
     });
 
+    // 处理 loading时，取消按钮操作状态
+    const handleLoadingStatus = () => {
+        const obj = {
+            keyboard,
+            maskClosable,
+            closable,
+            cancelButtonProps,
+        };
+
+        // 都为 true 的时候，强制执行
+        if (loadingDisableClose && confirmLoading) {
+            obj.keyboard = false;
+            obj.maskClosable = false;
+            obj.closable = false;
+            obj.cancelButtonProps = {
+                style: {display: 'none'},
+            };
+        }
+
+        return obj;
+    };
+
     // 计算高度
     useEffect(() => {
         state.height = Math.max(document.body.clientHeight - 300, 500);
@@ -113,14 +138,13 @@ const MyModal: FC<IProps> = (props) => {
 
             <Modal
                 {...modalProps}
+                {...handleLoadingStatus()}
                 centered={typeof centered === 'boolean' ? centered : state.isExceed}
-                className={`${className} ${hideModalCloseBtn ? 'zzzz-my-modal-hide-modal-close-btn' : ''}`}
                 confirmLoading={confirmLoading}
                 visible={visible}
                 width={fn.handleModalWidth(width)}
-
             >
-                <Spin spinning={!!confirmLoading}>
+                <Spin delay={100} spinning={!!confirmLoading}>
                     <div style={{display: 'flex'}}>
                         <div
                             id={state.domId}

@@ -25,9 +25,9 @@ export interface IProps extends ModalProps {
      */
     childContent?: (obj: {maxHeight: number}) => JSX.Element;
     /**
-     * 隐藏关闭按钮（右上角的 叉叉
+     * longing 中，禁止页面所有主动关闭操作
      */
-    hideModalCloseBtn?: boolean;
+    loadingDisableClose?: boolean;
 }
 
 export interface IPropsModalFn {
