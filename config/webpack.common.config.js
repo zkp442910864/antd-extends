@@ -144,6 +144,7 @@ module.exports = (env, argv, config) => {
                             loader: 'css-loader',
                             options: {
                                 sourceMap,
+                                modules: true,
                             },
                         },
                         {

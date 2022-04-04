@@ -12,6 +12,7 @@ module.exports = ({config}) => {
             {
                 loader: 'css-loader',
                 options: {
+                    modules: true,
                 },
             },
             {
