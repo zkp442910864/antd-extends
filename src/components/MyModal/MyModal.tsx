@@ -6,6 +6,7 @@ import zhCN from 'antd/es/locale/zh_CN';
 import globalConfig from '../config';
 import {useStateDeep, useDebounceEffect, empty} from '../../utils';
 import {IProps, TText} from './MyModal.type';
+import styles from './MyModal.less';
 
 export * from './MyModal.type';
 
@@ -15,12 +16,13 @@ const MyModal: FC<IProps> = (props) => {
         childRight,
         childFooter,
         confirmLoading,
-        // className,
         children,
         childContent,
         width,
         visible,
         centered,
+        className,
+        hideCloseBtn,
         ...modalProps
     } = props;
 
@@ -111,6 +113,7 @@ const MyModal: FC<IProps> = (props) => {
             <Modal
                 {...modalProps}
                 centered={typeof centered === 'boolean' ? centered : state.isExceed}
+                className={`${className} ${hideCloseBtn ? styles['zzzz-my-modal'] : ''}`}
                 confirmLoading={confirmLoading}
                 visible={visible}
                 width={fn.handleModalWidth(width)}

@@ -10,8 +10,8 @@ import {IProps, IPropsModalFn, TObj} from '../MyModal.type';
  * @param ComModal 组件
  * @returns 函数
  */
-export const createModalFn = <T extends IPropsModalFn, K = TObj>(ComModal: React.FC<T & IProps>) => {
-    return <T extends TObj>(data?: T) => {
+export const createModalFn = <T, K>(ComModal: React.FC<T & IPropsModalFn & IProps>) => {
+    return (data?: T) => {
 
         const div = document.createElement('div');
 

@@ -24,6 +24,10 @@ export interface IProps extends ModalProps {
      * 传入 高度
      */
     childContent?: (obj: {maxHeight: number}) => JSX.Element;
+    /**
+     * 隐藏关闭按钮（右上角的 叉叉
+     */
+    hideCloseBtn?: boolean;
 }
 
 export interface IPropsModalFn {
@@ -37,10 +41,10 @@ export interface IPropsModalFn {
     /**
      * 接收报错处理
      */
-    no: (obj: any) => any;
+    no: (obj?: any) => any;
     /**
      * 接收成功处理
      */
-    yes: (obj: any) => any;
+    yes: (obj?: any) => any;
 }
 
