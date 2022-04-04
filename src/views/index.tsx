@@ -9,7 +9,6 @@ import {useStateDeep, jsCopy} from '@/utils';
 import * as All from '../tsc';
 
 global.All = All;
-// import './index.scoped.less';
 
 const Home2 = (props: any) => {
 

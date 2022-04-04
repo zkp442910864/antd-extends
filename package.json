@@ -29,10 +29,8 @@
     "types": "types/tsc.d.ts",
     "peerDependencies": {
         "antd": ">=3.0.0 || >=4.0.0",
-        "babel-plugin-react-scoped-css": "1.1.1",
         "react": ">=16.0.0 || >=17.0.0",
-        "react-dom": ">=16.0.0 || >=17.0.0",
-        "scoped-css-loader": "^1.0.0"
+        "react-dom": ">=16.0.0 || >=17.0.0"
     },
     "dependencies": {
         "antd": "^3.0.0",

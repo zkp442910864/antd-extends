@@ -1,45 +1,17 @@
 # 组件库
 
 ### 注意点
-###### 样式需要安装依赖
-[scoped-css-loader npm地址](https://www.npmjs.com/package/scoped-css-loader?activeTab=readme) <br />
-`npm i babel-plugin-react-scoped-css scoped-css-loader -D`
-```
-    // babel 中需要配置
-    {
-        plugins: [
-        '@babel/plugin-transform-runtime',
-        '@babel/plugin-transform-regenerator',
-        [
-            'babel-plugin-react-scoped-css',
-            {
-                // 只对带有 scoped 名称的起作用
-                include: '.scoped.(sa|sc|le|c)ss$',
-            },
-        ],
-    }
-```
-```
-    // webpack 中需要针对样式，增加处理器，放在 css-loader 后面
-    {
-        loader: 'scoped-css-loader',
-    }
-```
 
 ###### 依赖项
 ```json
     {
         "peerDependencies": {
-            "antd": ">=3.0.0",
-            "babel-plugin-react-scoped-css": "1.1.1",
-            "react": ">16.0.0",
-            "scoped-css-loader": "^1.0.0"
+            "antd": ">=3.0.0 || >=4.0.0",
+            "react": ">=16.0.0 || >=17.0.0",
+            "react-dom": ">=16.0.0 || >=17.0.0"
         },
     }
 ```
-
-###### umi 项目的引入方式
-
 
 ### tsc 打包es模块
 - [资料1](https://segmentfault.com/a/1190000039852833)
@@ -85,4 +57,48 @@
     pnpm i                     # Manually install the new deps
     pnpm i -D @storybook/cli   # Also need this for start-storybook command
     pnpm storybook
+```
+
+
+### 扩展点
+
+###### 带作用域的css
+[scoped-css-loader npm地址](https://www.npmjs.com/package/scoped-css-loader?activeTab=readme) <br />
+`npm i babel-plugin-react-scoped-css scoped-css-loader -D`
+
+###### umi@2.x 项目的引入带作用域的css
+```
+    // chainWebpack 扩展配置
+    // 路径 config\plugin.config.js
+    config.module
+        .rule('less')
+        .use('scoped-css-loader')
+        .loader('scoped-css-loader')
+        .after('css-loader')
+        .end();
+
+    config.module
+        .rule('less-in-node_modules')
+        .use('scoped-css-loader')
+        .loader('scoped-css-loader')
+        .after('css-loader')
+        .end();
+
+    // 增加属性
+    // 路径 config\config.js
+    extraBabelPlugins: [
+        [
+            'babel-plugin-react-scoped-css',
+            {
+                // exclude: [path.resolve(__dirname, '.', '/src/assets/style/common.less')],
+                // 包含 common.less 都会被过滤
+                // include: '^((?!common.less).)*.(sa|sc|le|c)ss$',
+                // 只对带有 scoped 名称的起作用
+                include: '.scoped.(sa|sc|le|c)ss$',
+            },
+        ],
+    ],
+
+    // 最重要一步
+    // cssLoaderOptions 这个属性里面要把 .scoped.less 文件过滤掉
 ```

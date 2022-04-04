@@ -32,7 +32,7 @@ import {
     ICCustom,
     ICNumberRang,
 } from './MyQueryForm.type';
-import './MyQueryForm.scoped.less';
+import './MyQueryForm.less';
 
 export * from './MyQueryForm.type';
 
@@ -147,7 +147,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
 
             return (
                 <FormItem
-                    className="form-item"
+                    className="zzzz-form-item"
                     key={handle.createKey(item)}
                     label={item.label}
                     style={handle.width(item.itemWidth || '25%')}
@@ -396,7 +396,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
 
         return (
             <FormItemLoad
-                className="btn-box"
+                className="zzzz-btn-box"
                 delay={200}
                 indicator={<></>}
                 spinning={loading}

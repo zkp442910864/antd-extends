@@ -9,7 +9,7 @@ import Exhibit from '../Exhibit';
 import {useStateDeep, useDebounceEffect, empty} from '../../utils';
 import {lockTableHeadFn} from './modules/lockTableHeadFn';
 import {TObj, TResData, TOrderBy, IProps, IColumn, TText, EOrderMap, TableRef} from './MyTable.type';
-import './MyTable.scoped.less';
+import './MyTable.less';
 
 export * from './MyTable.type';
 

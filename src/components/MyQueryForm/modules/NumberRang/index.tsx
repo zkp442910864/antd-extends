@@ -3,7 +3,7 @@ import {InputNumber} from 'antd';
 
 import {useStateDeep, empty} from '../../../../utils';
 import {IProps} from './index.type';
-import './index.scoped.less';
+import './index.less';
 
 export * from './index.type';
 
@@ -54,10 +54,10 @@ const NumberRang: FC<IProps> = ({
 
 
     return (
-        <div className="flex-box">
+        <div className="zzzz-flex-box">
             <InputNumber
                 {...otherProps}
-                className={`flex-1 ${className}`}
+                className={`zzzz-flex-1 ${className}`}
                 max={valueRang ? valueRang[1] : undefined}
                 min={valueRang ? valueRang[0] : undefined}
                 placeholder={minPlaceholder}
@@ -66,10 +66,10 @@ const NumberRang: FC<IProps> = ({
                 onBlur={blur}
                 onChange={(e) => change('minValue', e)}
             />
-            <div className="center-interval">~</div>
+            <div className="zzzz-center-interval">~</div>
             <InputNumber
                 {...otherProps}
-                className={`flex-1 ${className}`}
+                className={`zzzz-flex-1 ${className}`}
                 max={valueRang ? valueRang[1] : undefined}
                 min={valueRang ? valueRang[0] : undefined}
                 placeholder={maxPlaceholder}
