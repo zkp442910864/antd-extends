@@ -61,7 +61,7 @@ export const PromptFn = () => {
     const click2 = async () => {
         const data = await promptFn({
             title: 'qwe',
-            hideCloseBtn: false,
+            hideModalCloseBtn: false,
             customJSX: (value, change) => {
                 return (
                     <InputNumber style={{width: '100%'}} value={value} onChange={(e) => change(e)} />

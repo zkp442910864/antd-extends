@@ -44,7 +44,7 @@ const Prompt: FC<IPrompt & IPropsModalFn & IMyModalProps> = ({
 
     return (
         <MyModal
-            hideCloseBtn={true}
+            hideModalCloseBtn={true}
             maskClosable={false}
             width={500}
             {...modalProps}

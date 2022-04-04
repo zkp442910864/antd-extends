@@ -27,7 +27,7 @@ export interface IProps extends ModalProps {
     /**
      * 隐藏关闭按钮（右上角的 叉叉
      */
-    hideCloseBtn?: boolean;
+    hideModalCloseBtn?: boolean;
 }
 
 export interface IPropsModalFn {
