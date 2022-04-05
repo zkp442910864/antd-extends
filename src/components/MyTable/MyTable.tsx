@@ -6,7 +6,7 @@ import {AffixProps} from 'antd/lib/affix';
 
 import globalConfig from '../config';
 import Exhibit from '../Exhibit';
-import {useStateDeep, useDebounceEffect, empty} from '../../utils';
+import {useStateDeep, useDebounceEffect, empty, sleep} from '../../utils';
 import {lockTableHeadFn} from './modules/lockTableHeadFn';
 import {TObj, TResData, TOrderBy, IProps, IColumn, TText, EOrderMap, TableRef} from './MyTable.type';
 import './MyTable.less';
@@ -44,6 +44,7 @@ const MyTable: FC<IProps> = forwardRef((
         autoRowKey = true,
         autoSelectChild = false,
         childrenColumnName = 'children',
+        simplePaging = false,
 
         disabledPage,
         handleColumnItemConfig,
@@ -251,6 +252,32 @@ const MyTable: FC<IProps> = forwardRef((
 
             return {params, emptyOrderBy};
         },
+        // 简单分页处理
+        handleSimplePaging: async (data: TResData, page: number, pageSize: number) => {
+            const listLength = data.list.length;
+            const maxTotal = page * pageSize;
+
+            // total 有值的话不处理，说明是有总数的
+            if (data.pagination.total > 0) return;
+
+            if (listLength <= 0) {
+                // 为 0 的时候，代表最后一页了，禁止掉下一页
+                data.pagination.total = maxTotal - pageSize;
+                data.list = state.resData.list;
+                state.current = page - 1;
+                await sleep(0);
+                await getList(page - 1);
+                state.listTotal = maxTotal - pageSize;
+                // resData!.pagination.total = maxTotal - pageSize;
+                // console.log(resData);
+            } else if (listLength >= pageSize) {
+                // 数量一致的时候，可能存在下一页
+                data.pagination.total = maxTotal + pageSize;
+            } else if (listLength < pageSize) {
+                // 数量不足的时候，不存在下一页
+                data.pagination.total = maxTotal - pageSize + listLength;
+            }
+        },
     });
 
     // 请求接口
@@ -288,6 +315,7 @@ const MyTable: FC<IProps> = forwardRef((
             // 数据预处理
             setFn.setListRowKey(initRes.data.list);
             setFn.setListCache(initRes.data.list);
+            simplePaging && setFn.handleSimplePaging(initRes.data, params.current, params.pageSize);
             handleResData?.(initRes);
             return initRes;
         }).catch((error) => {
@@ -395,11 +423,31 @@ const MyTable: FC<IProps> = forwardRef((
                 current,
             };
 
-            // if (isStaticData && !listShowSizeChanger) {
-            //     obj.showQuickJumper = false;
-            //     obj.showSizeChanger = false;
-            //     obj.pageSize = 10;
-            // }
+            if (simplePaging) {
+                obj.className = 'zzzz-simple-paging';
+                obj.showQuickJumper = false;
+
+                obj.showTotal = (total) => {
+                    return (
+                        <>
+                            {/* <span>共{total}条</span> */}
+                            <span>第{current}页</span>
+                        </>
+                    );
+                };
+                obj.itemRender = (current, type, originalElement) => {
+                    if (type === 'prev') {
+                        return <a>上一页</a>;
+                    }
+                    if (type === 'next') {
+                        return <a>下一页</a>;
+                    }
+                    // console.log(originalElement);
+                    return originalElement;
+                };
+            }
+
+
             handlePageConfig?.(obj);
 
             return obj;
@@ -420,29 +468,6 @@ const MyTable: FC<IProps> = forwardRef((
                         return arr;
                     }, []);
 
-                    // 自动选中 子体 逻辑
-                    // if (autoSelectChild) {
-                    //     // console.log(state.ajaxList);
-                    //     // debugger;
-                    //     const childKey = childrenColumnName;
-                    //     const getRowKey = tableHandleFn.handleRowKey();
-                    //     const handle = (list: TObj[], keyArr: TText[], itemArr: TObj[]) => {
-                    //         list.forEach((item) => {
-                    //             const key = getRowKey(item);
-                    //             const child = item[childKey];
-                    //             keyArr.push(key);
-                    //             itemArr.push(item);
-                    //             if (child && child.length) {
-                    //                 handle(child, keyArr, itemArr);
-                    //             }
-                    //         });
-                    //     };
-                    //     const newKeys: TText[] = [];
-                    //     const newItems: TObj[] = [];
-                    //     handle(items, newKeys, newItems);
-                    //     keys = newKeys as string[] | number[];
-                    //     items = newItems;
-                    // }
                     state.selectRowKeys = keys;
                     state.selectRowItems = items;
                     // rowSelectChange?.(keys, items);
@@ -629,7 +654,7 @@ const MyTable: FC<IProps> = forwardRef((
                 sortDirections={sortDirections}
                 tableLayout="fixed"
                 onChange={isStaticData ? tableHandleFn.staticChange : tableHandleFn.change}
-                // onRow={onRow}
+            // onRow={onRow}
             />
 
             {/* 置顶 */}

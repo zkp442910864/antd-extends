@@ -215,4 +215,10 @@ export interface IProps<T = TObj> extends Omit<TableProps<T>, 'columns'> {
      * 选中主体数据的时候，自动选中所有子体数据
      */
     autoSelectChild?: boolean;
+    /**
+     * 简单分页展示
+     *
+     * total不确定的时候使用
+     */
+    simplePaging?: boolean;
 }

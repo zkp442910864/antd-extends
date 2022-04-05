@@ -223,7 +223,7 @@ export const AjaxTable = () => {
 
     const dataList = (() => {
         const arr = [];
-        for (let index = 0; index < 36; index++) {
+        for (let index = 0; index < 40; index++) {
             arr.push({
                 name: `John Brown ${index}`,
                 age: index,
@@ -266,7 +266,7 @@ export const AjaxTable = () => {
                         },
                     },
                 });
-            }, 2000);
+            }, 1000);
         });
     };
 
@@ -338,6 +338,124 @@ export const AjaxTable = () => {
 };
 AjaxTable.storyName = '5.列表请求';
 
+export const AjaxTable2 = () => {
+
+    const dataList = (() => {
+        const arr = [];
+        for (let index = 0; index < 60; index++) {
+            arr.push({
+                name: `John Brown ${index}`,
+                age: index,
+                children: [{name: `John Brown ${index}`, age: index + 100}],
+                list: [{aa: 6}, {aa: 5}, {aa: 4}, {aa: 3}, {aa: 2}, {aa: 1}],
+            });
+        }
+
+        return arr;
+    })();
+    const myTable = createRef<TableRef>();
+
+    // 配合查询表单组件使用
+    const getFormData = () => {
+        return {
+            a: 2,
+            b: 3,
+        };
+    };
+
+    const requestApi = (params: any) => {
+        // console.log(params);
+        return new Promise<any>((resolve, reject) => {
+            // console.log('请求');
+
+            setTimeout(() => {
+                const arr = dataList.slice(
+                    0 + ((params.current - 1) * params.pageSize),
+                    params.pageSize + ((params.current - 1) * params.pageSize),
+                );
+
+                // debugger;
+                // console.log(arr);
+                resolve({
+                    data: {
+                        list: arr,
+                        pagination: {
+                            pageSizeOptions: [20],
+                            pageSize: params.pageSize,
+                            current: params.current,
+                            total: 0,
+                        },
+                    },
+                });
+            }, 1000);
+        });
+    };
+
+
+    return (
+        <div className="">
+            <button
+                onClick={() => {
+                    myTable.current!.getList(1);
+                }}
+            >
+                搜索
+            </button>
+            <button onClick={() => {myTable.current!.clearList();}}>重置</button>
+
+            <MyTable
+                // autoRowKey={false}
+                autoSelectChild={true}
+                childrenColumnName="children"
+                columns={[
+                    {title: 'Name', dataIndex: 'name'},
+                    {title: 'Age', dataIndex: 'age'},
+                    {
+                        title: '操作',
+                        dataIndex: 'operation',
+                        render (text, item, index, forceUpdate) {
+
+                            return (
+                                <>
+                                    {
+                                        (item.qq ? item.list : item.list?.slice?.(0, 1))?.map?.((item: TObj) => {
+                                            return (
+                                                <div key={item.key}>{item.aa}</div>
+                                            );
+                                        })
+                                    }
+                                    <div
+                                        onClick={() => {
+                                            item.qq = true;
+                                            // console.log(item);
+                                            forceUpdate();
+                                        }}
+                                    >
+                                        k
+                                    </div>
+                                    <div onClick={() => (item.qq = false)}>g</div>
+                                </>
+                            );
+                        },
+                    },
+                ]}
+                defaultSort={{field: 'asd', order: 0}}
+                // expandedRowKeys={[0]}
+                expandIconColumnIndex={0}
+                getFormData={getFormData}
+                ref={myTable}
+                // lockHead={true}
+                requestApi={requestApi}
+                rowKey={item => item.age}
+                scroll={{y: 500}}
+                showTopDiv={false}
+                simplePaging={true}
+            />
+        </div>
+    );
+};
+AjaxTable2.storyName = '6.列表请求-简单分页';
+
 // export const LockHeadAndTopDiv = () => {
 //     const dataList = (() => {
 //         const arr = [];
@@ -375,7 +493,7 @@ AjaxTable.storyName = '5.列表请求';
 // LockHeadAndTopDiv.storyName = '6.锁表头/置顶按钮/锁定插入内容';
 
 export const LockHeadAndTopDiv = Template.bind({});
-LockHeadAndTopDiv.storyName = '6.锁表头/置顶按钮/锁定插入内容';
+LockHeadAndTopDiv.storyName = '7.锁表头/置顶按钮/锁定插入内容';
 LockHeadAndTopDiv.args = {
     list: (() => {
         const arr = [];
