@@ -72,6 +72,8 @@ export function lockTableHeadFn (id: string, fixedTop = 50, judgeFixedTop: (dom:
         let newOthreHeight = othreHeight;
         if (lockChildrenFn) {
             childrenDom = childrenDom || document.getElementById(domChildId);
+            // 这个为边距
+            newOthreHeight += 10;
             newOthreHeight += childrenDom?.scrollHeight || 0;
         }
 
