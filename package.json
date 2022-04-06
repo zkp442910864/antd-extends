@@ -21,8 +21,7 @@
         "copy:types": "copyfiles -u 1 src/types/**/* types/",
         "jest": "jest --passWithNoTests",
         "storybook": "start-storybook -p 6006",
-        "build:docs": "build-storybook -o ./docs",
-        "preinstall": "npx only-allow npm"
+        "build:docs": "build-storybook -o ./docs"
     },
     "main": "dist/index.js",
     "module": "es/tsc.js",
