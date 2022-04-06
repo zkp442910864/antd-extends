@@ -16,6 +16,8 @@ export function lockTableHeadFn (id: string, fixedTop = 50, judgeFixedTop: (dom:
     const contentBox = dom.getElementsByClassName('ant-table-body')[0] as HTMLElement | null;
     const headBox = dom.getElementsByClassName('ant-table-thead')[0] as HTMLElement | null;
     const tbodyBox = dom.getElementsByClassName('ant-table-tbody')[0] as HTMLElement | null;
+    let childrenDom = document.getElementById(domChildId);
+
     if (!contentBox || !headBox || !tbodyBox) return null;
 
     const tr = headBox.getElementsByTagName('tr')[0];
@@ -30,10 +32,6 @@ export function lockTableHeadFn (id: string, fixedTop = 50, judgeFixedTop: (dom:
         othreHeight = 0;
     }
 
-    if (lockChildrenFn) {
-        const domChild = document.getElementById(domChildId);
-        othreHeight += domChild?.scrollHeight || 0;
-    }
 
     const setStyle = (dom: HTMLElement, newStyle?: string) => {
         let initStyle = dom.getAttribute('init-style');
@@ -71,6 +69,11 @@ export function lockTableHeadFn (id: string, fixedTop = 50, judgeFixedTop: (dom:
         const status = headBox.getAttribute('lock');
         // let initOffsetLeft = +headBox.getAttribute('initOffsetLeft');
         // console.log(contentBox.getBoundingClientRect());
+        let newOthreHeight = othreHeight;
+        if (lockChildrenFn) {
+            childrenDom = childrenDom || document.getElementById(domChildId);
+            newOthreHeight += childrenDom?.scrollHeight || 0;
+        }
 
         // 锁住后，执行的逻辑
         if (status === '1') {
@@ -82,10 +85,10 @@ export function lockTableHeadFn (id: string, fixedTop = 50, judgeFixedTop: (dom:
 
             const boxHeight = headBox.offsetHeight;
             const boxWidth = headBox.offsetWidth;
-            setStyle(headBox, `width:${boxWidth}px;height:${boxHeight}px;position:fixed;top:${othreHeight}px;left:${offsetLeft + 1}px;z-index:999;`);
+            setStyle(headBox, `width:${boxWidth}px;height:${boxHeight}px;position:fixed;top:${newOthreHeight}px;left:${offsetLeft + 1}px;z-index:999;`);
         }
 
-        if (offsetTop <= othreHeight && status !== '1') {
+        if (offsetTop <= newOthreHeight && status !== '1') {
             headBox.setAttribute('lock', '1');
             const boxHeight = headBox.offsetHeight;
             const boxWidth = headBox.offsetWidth;
@@ -101,9 +104,9 @@ export function lockTableHeadFn (id: string, fixedTop = 50, judgeFixedTop: (dom:
 
 
             setStyle(contentBox, `padding-top:${boxHeight}px;`);
-            setStyle(headBox, `width:${boxWidth}px;height:${boxHeight}px;position:fixed;top:${othreHeight}px;z-index:999;`);
+            setStyle(headBox, `width:${boxWidth}px;height:${boxHeight}px;position:fixed;top:${newOthreHeight}px;z-index:999;`);
 
-        } else if (offsetTop > othreHeight && status !== '0') {
+        } else if (offsetTop > newOthreHeight && status !== '0') {
             resetHead();
         }
     };
