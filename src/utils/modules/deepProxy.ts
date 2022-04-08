@@ -12,11 +12,11 @@ import {isCopyType} from './jsCopy';
 export const deepProxy = <T extends TRData = any>(
     data: T,
     cb: TCb,
-    cache: {proxy: T, rawObj: TData, data: T}[] = [],
+    cache: {proxy?: T, rawObj: TData, data: T}[] = [],
     parentRawObj?: TData,
     parentKey?: string | number | symbol,
 ) => {
-
+    // debugger;
     const mountData = (rObj: TData) => {
         // TODO: 父层数据关联子层数据 （类似深拷贝）
         if (typeof parentRawObj === 'object' && typeof parentKey !== 'undefined') {
@@ -46,14 +46,6 @@ export const deepProxy = <T extends TRData = any>(
     }
 
     const rawObj: TData = Array.isArray(data) ? [] : {};
-
-    mountData(rawObj);
-
-    // 深度代理 proxy
-    for (const key in data) {
-        rawObj[key] = data[key];
-        data[key] = deepProxy(data[key], cb, cache, rawObj, key);
-    }
 
     const proxy = new Proxy(data, {
 
@@ -85,6 +77,8 @@ export const deepProxy = <T extends TRData = any>(
         data,
     };
 
+    mountData(rawObj);
+
     // 把 proxy 和 复制出来的对象 进行绑定
     cache.push(cacheItem);
 
@@ -108,6 +102,12 @@ export const deepProxy = <T extends TRData = any>(
             },
         },
     });
+
+    // 深度代理 proxy
+    for (const key in data) {
+        rawObj[key] = data[key];
+        data[key] = deepProxy(data[key], cb, cache, rawObj, key);
+    }
 
     return proxy;
 };
