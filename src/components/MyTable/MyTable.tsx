@@ -378,7 +378,7 @@ const MyTable: FC<IProps> = forwardRef((
 
                 if (item.render) {
                     const oldRender = item.render;
-                    item.render = (text, item, index) => {
+                    newItem.render = (text, item, index) => {
                         const forceUpdate = () => {
                             // console.log(rawTableRef.current);
                             if (rawTableRef.current?.forceUpdate) {

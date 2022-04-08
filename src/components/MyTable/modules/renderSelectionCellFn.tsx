@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, FC} from 'react';
 
 /**
  * 用来重新渲染 勾选列的函数
@@ -9,7 +9,8 @@ import React from 'react';
  * @returns jsx
  */
 export const renderSelectionCellFn: TRenderSelectionCellFn = (render) => {
-    return (props: any) => {
+
+    const Cell = useCallback((props: any) => {
 
         // 重新渲染选择框
         if (props?.className?.includes?.('ant-table-selection-column')) {
@@ -34,7 +35,9 @@ export const renderSelectionCellFn: TRenderSelectionCellFn = (render) => {
         }
 
         return <td {...props} />;
-    };
+    }, []);
+
+    return Cell;
 };
 
 
@@ -56,4 +59,4 @@ export interface IRawChildren {
     checkbox: JSX.Element;
 }
 export type TRender = (rawChildren: IRawChildren, record: object) => JSX.Element;
-export type TRenderSelectionCellFn = (render: TRender) => React.ReactType<any>;
+export type TRenderSelectionCellFn = (render: TRender) => FC<any>;
