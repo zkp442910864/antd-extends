@@ -38,7 +38,7 @@ export const useStateDeep = <T>(val: T, cb?: TCb) => {
  * 监听变化, 同时触发重新渲染
  * @param {*} val array / object
  */
-export const useStateDeepValue = <T>(val: T, cb?: TCb2) => {
+export const useStateDeepValue = <T>(val?: T, cb?: TCb2) => {
     const [random, setRandom] = useStateAutoStop(0);
 
     // 节流防抖函数
