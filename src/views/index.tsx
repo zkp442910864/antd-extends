@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState, createRef} from 'react';
-import {Select} from 'antd';
+import {Select, Input, InputNumber} from 'antd';
 
-import {AsyncTreeSelect, AsyncSelect, MyTable, renderSelectionCellFn, spinHoc, Exhibit} from '@/components';
+import {AsyncTreeSelect, AsyncSelect, MyTable, renderSelectionCellFn, spinHoc, SmallParticle} from '@/components';
 // import MyQueryForm from '@/components/MyQueryForm';
 // import MyModal, {createModalFn} from '@/components/MyModal';
 import {useStateDeep, jsCopy} from '@/utils';
@@ -10,99 +10,7 @@ import * as All from '../tsc';
 
 global.All = All;
 
-const Home2 = (props: any) => {
 
-    const dataList = (() => {
-        const arr = [];
-        for (let index = 0; index < 36; index++) {
-            arr.push({
-                name: `John Brown ${index}`,
-                age: index,
-                children: [{name: `John Brown ${index}`, age: index + 100}],
-                list: [{aa: 6}, {aa: 5}, {aa: 4}, {aa: 3}, {aa: 2}, {aa: 1}],
-            });
-        }
-
-        return arr;
-    })();
-    const myTable = createRef<any>();
-
-    // 配合查询表单组件使用
-    const getFormData = () => {
-        return {
-            a: 2,
-            b: 3,
-        };
-    };
-
-    const requestApi = (params: any) => {
-        // console.log(params);
-        return new Promise<any>((resolve, reject) => {
-            setTimeout(() => {
-                const arr = dataList.slice(
-                    0 + ((params.current - 1) * params.pageSize),
-                    params.pageSize + ((params.current - 1) * params.pageSize),
-                );
-
-                // debugger;
-                // console.log(arr);
-                resolve({
-                    data: {
-                        list: arr,
-                        pagination: {
-                            pageSizeOptions: [20],
-                            pageSize: params.pageSize,
-                            current: params.current,
-                            total: dataList.length,
-                        },
-                    },
-                });
-            }, 2000);
-        });
-    };
-
-
-    return (
-        <div {...props}>
-            <button
-                onClick={() => {
-                    console.log(myTable.current);
-                    myTable.current!.getList(1);
-                }}
-            >
-                搜索
-            </button>
-            <button onClick={() => {myTable.current!.clearList();}}>重置</button>
-
-            <MyTable
-                // autoRowKey={false}
-                autoSelectChild={true}
-                childrenColumnName="children"
-                columns={[
-                    {title: 'Name', dataIndex: 'name'},
-                    {title: 'Age', dataIndex: 'age'},
-                ]}
-                defaultSort={{field: 'asd', order: 0}}
-                // expandedRowKeys={[0]}
-                expandIconColumnIndex={0}
-                list={dataList}
-                // getFormData={getFormData}
-                ref={myTable}
-                // lockHead={true}
-                // requestApi={requestApi}
-                rowKey={item => item.age}
-                rowSelectChange={(keys, rows) => {
-                    console.log(keys, rows);
-                }}
-            // scroll={{y: 500}}
-            // showTopDiv={false}
-            />
-        </div>
-    );
-};
-
-
-const NewHome2 = Exhibit.packComponent(Home2);
 const Home: FC = (props) => {
 
     const state = useStateDeep({
@@ -111,17 +19,29 @@ const Home: FC = (props) => {
         selectItems: [] as any[],
         list: (() => {
             const arr = [];
-            for (let index = 0; index < 36; index++) {
-                arr.push({name: 'John Brown', age: index, qwe: 'New York No. 1 Lake Park', children: [{age: 'qwe' + index}]});
+            for (let index = 0; index < 200; index++) {
+                arr.push({
+                    name: 'John Brown',
+                    age: index,
+                    qwe: 'New York No. 1 Lake Park',
+                    list: [
+                        {key: 1, aa: 2},
+                        {key: 3, aa: 4},
+                    ],
+                    g: 1,
+                    children: [{age: 'qwe' + index}],
+                });
             }
 
             return arr;
         })(),
     });
 
+    console.log(state.list);
+    
+
     return (
         <div className="bbb bbb2">
-            <NewHome2 rShow={false} />
             {/* <div className="bbbbb">123</div> */}
             <MyTable
                 columns={[
@@ -131,26 +51,51 @@ const Home: FC = (props) => {
                         title: '操作',
                         dataIndex: 'operation',
                         render (text, item, index, forceUpdate) {
+                            // console.log(text, index, forceUpdate);
 
                             return (
                                 <>
-                                    {/* {
-                                        (item.qq ? item.list : item.list?.slice?.(0, 1))?.map?.((item: TObj) => {
+                                    {
+                                        (item.qq ? item.list : item.list?.slice?.(0, 1))?.map?.((item: any) => {
                                             return (
                                                 <div key={item.key}>{item.aa}</div>
                                             );
                                         })
-                                    } */}
+                                    }
                                     <div
                                         onClick={() => {
-                                            item.qq = true;
-                                            // console.log(item);
+                                            item.qq = !item.qq;
+                                            // console.log(forceUpdate);
                                             forceUpdate();
                                         }}
                                     >
                                         k
                                     </div>
-                                    <div onClick={() => (item.qq = false)}>g</div>
+                                    <div>
+                                        {/* <input
+                                            value={item.g}
+                                            onChange={(e) => {
+                                                console.log(e.target.value);
+                                                item.g = e.target.value;
+                                            }}
+                                        /> */}
+                                        <SmallParticle
+                                            item={item}
+                                            vmodel="g"
+                                        >
+                                            {(value, change) => (
+                                                <InputNumber
+                                                    max={100}
+                                                    min={1}
+                                                    precision={2}
+                                                    value={value}
+                                                    onChange={(e) => {
+                                                        change(e);
+                                                    }}
+                                                />
+                                            )}
+                                        </SmallParticle>
+                                    </div>
                                 </>
                             );
                         },
@@ -164,37 +109,18 @@ const Home: FC = (props) => {
                         // },
                         cell: renderSelectionCellFn(({checkbox, expand}, item) => {
                             // console.log(item);
-
                             return (
                                 <div>
                                     {checkbox}
                                     {expand}
-                                    <div>123123</div>
+                                    333
                                 </div>
                             );
                         }),
-                        // cell: (props) => {
-                        //     if (props.className.includes('ant-table-selection-column')) {
-                        //         // 重新渲染选择框
-                        //         const {
-                        //             children,
-                        //             ...otherProps
-                        //         } = props;
-                        //         const [placeholder, expand, checkbox] = children;
-                        //         console.log(checkbox._owner.pendingProps.record);
-                        //         // console.log(otherProps);
-                        //         return (
-                        //             <td {...otherProps}>
-                        //                 {checkbox}
-                        //                 {expand}
-                        //             </td>
-                        //         );
-                        //     }
-                        //     return <td {...props} />;
-                        // },
                     },
                 }}
                 defaultSort={{field: 'asd', order: 0}}
+                disabledPage={true}
                 // expandedRowRender={() => {
                 //     return (
                 //         <div>123</div>

@@ -3,6 +3,7 @@ export {default as Test} from './Test';
 export {default as MyQueryForm} from './MyQueryForm';
 export {default as MyTable, renderSelectionCellFn} from './MyTable';
 export {default as MyModal, createModalFn} from './MyModal';
+export {default as SmallParticle} from './SmallParticle';
 
 export {default as Exhibit} from './Exhibit';
 export * from './MyQueryForm/modules';
