@@ -19,11 +19,16 @@ export interface IProps extends ModalProps {
      */
     childFooter?: (obj: {domId: string}) => JSX.Element;
     /**
+     * @deprecated
      * 替换 children 内容
      *
-     * 传入 高度
+     * 弃用
      */
     childContent?: (obj: {maxHeight: number}) => JSX.Element;
+    /**
+     * 扩展children 可为函数
+     */
+    children?: (obj: {maxHeight: number}) => JSX.Element | JSX.Element;
     /**
      * longing 中，禁止页面所有主动关闭操作
      */

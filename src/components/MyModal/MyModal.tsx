@@ -155,7 +155,13 @@ const MyModal: FC<IProps> = (props) => {
                                 position: 'relative',
                             }}
                         >
-                            {childContent ? childContent({maxHeight: state.height}) : children}
+                            {
+                                childContent
+                                    ? childContent({maxHeight: state.height})
+                                    : typeof children === 'function'
+                                        ? children({maxHeight: state.height})
+                                        : children
+                            }
                         </div>
 
                         {childRight ? childRight({domId: state.domId}) : ''}
