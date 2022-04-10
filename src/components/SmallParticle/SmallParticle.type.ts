@@ -2,7 +2,17 @@
 
 export type TChange = (newVal?: any) => void;
 export type TObj = {[key: string]: any};
-export type TSyncDataFn = () => void;
+
+export interface IDep {
+    /**
+     * 对象，做为key使用
+     */
+    item: TObj;
+    /**
+     * 执行函数
+     */
+    fnArr: Array<() => void>;
+}
 
 export interface IProps {
     /**
