@@ -28,7 +28,7 @@ export interface IProps extends ModalProps {
     /**
      * 扩展children 可为函数
      */
-    children?: (obj: {maxHeight: number}) => JSX.Element | JSX.Element;
+    children?: ((obj: {maxHeight: number}) => JSX.Element) | JSX.Element;
     /**
      * longing 中，禁止页面所有主动关闭操作
      */
