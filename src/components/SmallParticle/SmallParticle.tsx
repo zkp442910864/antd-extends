@@ -91,6 +91,7 @@ const SmallParticle: FC<IProps> = (props) => {
                 return getValue();
             },
             set (val) {
+                if (getValue() === val) return;
                 setValue(val);
                 // console.log(dep);
                 // 触发
