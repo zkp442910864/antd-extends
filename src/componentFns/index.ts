@@ -1,4 +1,4 @@
 
-export * from './prompt';
-export * from './toast';
+export {promptFn} from './prompt';
+export {toast} from './toast';
 
