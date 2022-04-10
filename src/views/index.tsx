@@ -6,6 +6,7 @@ import {AsyncTreeSelect, AsyncSelect, MyTable, renderSelectionCellFn, spinHoc, S
 // import MyModal, {createModalFn} from '@/components/MyModal';
 import {useStateDeep, jsCopy} from '@/utils';
 
+import {aaFn} from './test';
 import * as All from '../tsc';
 
 global.All = All;
@@ -37,12 +38,14 @@ const Home: FC = (props) => {
         })(),
     });
 
-    console.log(state.list);
-    
+    // console.log(state.list);
 
     return (
         <div className="bbb bbb2">
             {/* <div className="bbbbb">123</div> */}
+            <div onClick={() => aaFn()}>
+                123
+            </div>
             <MyTable
                 columns={[
                     {title: 'Name', dataIndex: 'name'},
@@ -120,7 +123,7 @@ const Home: FC = (props) => {
                     },
                 }}
                 defaultSort={{field: 'asd', order: 0}}
-                disabledPage={true}
+                // disabledPage={true}
                 // expandedRowRender={() => {
                 //     return (
                 //         <div>123</div>
