@@ -3,7 +3,6 @@ import {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {useStateAutoStop} from './useStateAutoStop';
 import {deepProxy, deepValue, TCb, TCb2, TRData} from '../modules/deepProxy';
 import {throttleDebounce} from '../modules/throttleDebounce';
-import {debounce} from '../modules/debounce';
 
 /**
  * 深层变化监听, 类似 vue-reactive
