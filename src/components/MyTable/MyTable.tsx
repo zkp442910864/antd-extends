@@ -6,7 +6,7 @@ import {AffixProps} from 'antd/lib/affix';
 
 import globalConfig from '../config';
 import Exhibit from '../Exhibit';
-import {useStateDeep, useDebounceEffect, empty, sleep, useStateDeepValue, emptyArray} from '../../utils';
+import {useStateDeep, useDebounceEffect, empty, sleep, useStateDeepValue, emptyArray, jsCopy} from '../../utils';
 import {lockTableHeadFn} from './modules/lockTableHeadFn';
 import {TObj, TResData, TOrderBy, IProps, IColumn, TText, EOrderMap, TableRef} from './MyTable.type';
 import './MyTable.less';
@@ -145,9 +145,9 @@ const MyTable: FC<IProps> = forwardRef((
         select: () => {
             state.selectRowKeys = [];
             state.selectRowItems = [];
-            cache.value = {};
         },
         list: () => {
+            cache.value = {};
             state.current = 1;
             state.listTotal = 0;
             state.ajaxList = [];
@@ -198,13 +198,17 @@ const MyTable: FC<IProps> = forwardRef((
                     setFn.setListRowKey(child, level + 1);
                 }
 
-                item.$extendTimeIndex = `${Date.now()}-${parseInt((Math.random() * 100000000) + '', 10)}-${level}-${pageSize}-${current}-${index}`;
+                // item.$extendTimeIndex = `${Date.now()}-${parseInt((Math.random() * 100000000) + '', 10)}-${level}-${pageSize}-${current}-${index}`;
+                const val = `${Date.now()}-${parseInt((Math.random() * 100000000) + '', 10)}-${level}-${pageSize}-${current}-${index}`;
                 // 这个值将不接受遍历和修改,保证生成的唯一性,且不影响原数据遍历
-                // Object.defineProperty(item, '$extendTimeIndex', {
-                //     value: `${Date.now()}-${parseInt((Math.random() * 100000000) + '', 10)}-${level}-${pageSize}-${current}-${index}`,
-                //     enumerable: false,
-                //     writable: false,
-                // });
+                Object.defineProperty(item, '$extendTimeIndex', {
+                    // value: `${Date.now()}-${parseInt((Math.random() * 100000000) + '', 10)}-${level}-${pageSize}-${current}-${index}`,
+                    // enumerable: false,
+                    // writable: false,
+                    get () {
+                        return val;
+                    },
+                });
             });
         },
         // 设置数据 键值映射
@@ -588,12 +592,13 @@ const MyTable: FC<IProps> = forwardRef((
         if (Array.isArray(list)) {
             setFn.setListRowKey(list);
             setFn.setListCache(list);
-            staticList.value = list;
+
+            staticList.value = [...list];
         } else {
             staticList.value = [];
             cache.value = {};
         }
-    }, [list]);
+    }, [list, list?.length]);
 
     // 提供外部调用方法
     useImperativeHandle(ref, () => {
