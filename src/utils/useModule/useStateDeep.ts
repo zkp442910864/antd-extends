@@ -17,18 +17,19 @@ export const useStateDeep = <T>(val: T, cb?: TCb) => {
 
     // 不需要做处理，频繁调用，react内部会处理
     const tdFun = useMemo(() => {
-        // return throttleDebounce(() => {
-        //     setRandom(Date.now() + Math.random());
-        // }, 16);
-        return () => {
+        return throttleDebounce(() => {
             setRandom(Date.now() + Math.random());
-        };
+        }, 0);
+        // return () => {
+        //     setRandom(Date.now() + Math.random());
+        // };
     }, []);
 
     const proxy = useMemo(() => {
         return deepProxy(val, (...arg) => {
             cb?.(...arg);
-            tdFun();
+            // tdFun();
+            window.requestAnimationFrame(tdFun);
         });
     }, []);
 
@@ -46,18 +47,18 @@ export const useStateDeepValue = <T>(val?: T, cb?: TCb2) => {
 
     // 不需要做处理，频繁调用，react内部会处理
     const tdFun = useMemo(() => {
-        // return throttleDebounce(() => {
-        //     setRandom(Date.now() + Math.random());
-        // }, 16);
-        return () => {
+        return throttleDebounce(() => {
             setRandom(Date.now() + Math.random());
-        };
+        }, 16);
+        // return () => {
+        //     setRandom(Date.now() + Math.random());
+        // };
     }, []);
 
     const proxy = useMemo(() => {
         return deepValue(val, (...arg) => {
             cb?.(...arg);
-            tdFun();
+            window.requestAnimationFrame(tdFun);
         });
     }, []);
 
