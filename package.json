@@ -16,7 +16,7 @@
         "build:es": "babel src --out-dir es --extensions .tsx --extensions .ts --ignore src/**/*.stories.tsx --ignore src/views --ignore src/types --ignore src/stories --ignore src/router --ignore src/App.tsx --ignore src/main.ts --source-maps --copy-files  --no-copy-ignored",
         "build:tsc-types": "tsc -p tsconfig.build.json",
         "build:lib": "npm run clear && npm run build:tsc-types && npm run build:es && npm run build:umd",
-        "publish:patch": "npm version patch && npm run build:lib && npm publish",
+        "publish:patch": "npm run build:lib && npm version patch && npm publish",
         "copy:less": "copyfiles -u 1 src/**/*.scoped.less lib/",
         "copy:types": "copyfiles -u 1 src/types/**/* types/",
         "jest": "jest --passWithNoTests",
