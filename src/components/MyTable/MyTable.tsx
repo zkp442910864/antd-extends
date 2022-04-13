@@ -184,32 +184,37 @@ const MyTable: FC<IProps> = forwardRef((
             loadChange?.(val);
         },
         // 手动设置数据索引
-        setListRowKey: (data: TObj[], level = 0) => {
+        setListRowKey: (data: TObj[]) => {
             if (!data || !Array.isArray(data) || !autoRowKey) return;
 
             const {pageSize, current} = state;
 
-            data.forEach((item, index) => {
-                if (item.$extendTimeIndex) return;
+            const handle = (data: TObj[], level = 0) => {
 
-                const childKey = childrenColumnName;
-                const child = item[childKey];
-                if (child && child.length) {
-                    setFn.setListRowKey(child, level + 1);
-                }
+                data.forEach((item, index) => {
+                    if (!item.$extendTimeIndex) {
+                        item.$extendTimeIndex = `${Date.now()}-${parseInt((Math.random() * 100000000) + '', 10)}-${level}-${pageSize}-${current}-${index}`;
+                        // const val = `${Date.now()}-${parseInt((Math.random() * 100000000) + '', 10)}-${level}-${pageSize}-${current}-${index}`;
+                        // // // 这个值将不接受遍历和修改,保证生成的唯一性,且不影响原数据遍历
+                        // Object.defineProperty(item, '$extendTimeIndex', {
+                        //     // value: `${Date.now()}-${parseInt((Math.random() * 100000000) + '', 10)}-${level}-${pageSize}-${current}-${index}`,
+                        //     // enumerable: false,
+                        //     // writable: false,
+                        //     get () {
+                        //         return val;
+                        //     },
+                        // });
+                    }
 
-                // item.$extendTimeIndex = `${Date.now()}-${parseInt((Math.random() * 100000000) + '', 10)}-${level}-${pageSize}-${current}-${index}`;
-                const val = `${Date.now()}-${parseInt((Math.random() * 100000000) + '', 10)}-${level}-${pageSize}-${current}-${index}`;
-                // 这个值将不接受遍历和修改,保证生成的唯一性,且不影响原数据遍历
-                Object.defineProperty(item, '$extendTimeIndex', {
-                    // value: `${Date.now()}-${parseInt((Math.random() * 100000000) + '', 10)}-${level}-${pageSize}-${current}-${index}`,
-                    // enumerable: false,
-                    // writable: false,
-                    get () {
-                        return val;
-                    },
+                    const childKey = childrenColumnName;
+                    const child = item[childKey];
+                    if (child?.length) {
+                        handle(child, level + 1);
+                    }
                 });
-            });
+            };
+
+            handle(data);
         },
         // 设置数据 键值映射
         setListCache: (data: TObj[]) => {
@@ -220,9 +225,9 @@ const MyTable: FC<IProps> = forwardRef((
             const handle = (list: TObj[], cache: TObj) => {
                 list.forEach((item) => {
                     const key = getRowKey(item);
-                    const child = item[childKey];
                     cache[key] = item;
 
+                    const child = item[childKey];
                     if (child && child.length) {
                         handle(child, cache);
                     }
