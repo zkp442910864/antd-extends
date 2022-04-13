@@ -1,3 +1,4 @@
+
 import {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 
 import {useStateAutoStop} from './useStateAutoStop';
@@ -28,8 +29,8 @@ export const useStateDeep = <T>(val: T, cb?: TCb) => {
     const proxy = useMemo(() => {
         return deepProxy(val, (...arg) => {
             cb?.(...arg);
-            // tdFun();
-            window.requestAnimationFrame(tdFun);
+            tdFun();
+            // window.requestAnimationFrame(tdFun);
         });
     }, []);
 
@@ -42,7 +43,7 @@ export const useStateDeep = <T>(val: T, cb?: TCb) => {
  * 监听变化, 同时触发重新渲染
  * @param {*} val array / object
  */
-export const useStateDeepValue = <T>(val?: T, cb?: TCb2) => {
+export const useStateDeepValue = <T>(val: T, cb?: TCb2) => {
     const [random, setRandom] = useStateAutoStop(0);
 
     // 不需要做处理，频繁调用，react内部会处理
@@ -56,11 +57,15 @@ export const useStateDeepValue = <T>(val?: T, cb?: TCb2) => {
     }, []);
 
     const proxy = useMemo(() => {
-        return deepValue(val, (...arg) => {
+        return deepValue<T>(val, (...arg) => {
             cb?.(...arg);
-            window.requestAnimationFrame(tdFun);
+            tdFun();
+            // window.requestAnimationFrame(tdFun);
         });
     }, []);
 
     return proxy;
 };
+
+
+type TObj = {[key: string]: any};

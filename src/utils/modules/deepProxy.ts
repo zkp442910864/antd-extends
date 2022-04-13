@@ -11,7 +11,7 @@ import {isCopyType} from './jsCopy';
  */
 export const deepProxy = <T extends TRData = any>(
     data: T,
-    cb: TCb,
+    cb?: TCb,
     cache: {proxy?: T, rawObj: TData, data: T}[] = [],
     parentRawObj?: TData,
     parentKey?: string | number | symbol,
@@ -27,14 +27,14 @@ export const deepProxy = <T extends TRData = any>(
     // 不合适的数据类型都排除掉
     if (!isCopyType(data)) {
         mountData(data);
-        return data;
+        return data as T;
     }
 
     // 匹配缓存数据
     const find = cache.find(ii => (ii.proxy === data || ii.rawObj === data || ii.data === data));
     if (find) {
         mountData(find.rawObj);
-        return find.proxy;
+        return find.proxy as T;
     }
 
     // 匹配不到，对 传入proxy 做处理
@@ -42,7 +42,7 @@ export const deepProxy = <T extends TRData = any>(
     if (data._isProxy && data._raw && data._cache) {
         cache.push(data._cache);
         mountData(data._raw);
-        return data;
+        return data as T;
     }
 
     const rawObj: TData = Array.isArray(data) ? [] : {};
@@ -55,14 +55,14 @@ export const deepProxy = <T extends TRData = any>(
             const v = Reflect.set(target, key, deepProxy(value, cb, cache, rawObj, key), raw);
 
             const cbType = (target as any)[key] === undefined ? 'create' : 'modify';
-            cb(cbType, {target, key, value, raw});
+            cb?.(cbType, {target, key, value, raw});
 
             return v;
         },
         deleteProperty (target, key) {
 
             // delete rawObj[key];
-            cb('delete', {target, key});
+            cb?.('delete', {target, key});
 
             return Reflect.deleteProperty(target, key);
         },
@@ -118,7 +118,7 @@ export const deepProxy = <T extends TRData = any>(
  * @param {*} cb 设置时候触发
  * @returns proxy
  */
-export const deepValue = <T extends TData = TData>(val?: T, cb?: TCb2) => {
+export const deepValue = <T extends TData = TData>(val: T, cb?: TCb2) => {
     const obj = {value: val};
     const proxy = new Proxy(obj, {
         set (target, key, value, raw) {
