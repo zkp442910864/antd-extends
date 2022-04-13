@@ -5,6 +5,8 @@ import 'antd/dist/antd.css';
 import Component from './views';
 
 export default () => {
+    console.time('入口耗时');
+
     // 主入口
     const Main = () => {
 
@@ -15,4 +17,6 @@ export default () => {
 
 
     ReactDom.render(<Main />, document.getElementById('root'));
+    console.timeEnd('入口耗时');
+
 };

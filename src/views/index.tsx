@@ -1,19 +1,22 @@
-import React, {FC, useEffect, useState, createRef} from 'react';
+import React, {FC, useEffect, useState, createRef, useRef} from 'react';
 import {Select, Input, InputNumber} from 'antd';
 
 import {AsyncTreeSelect, AsyncSelect, MyTable, renderSelectionCellFn, spinHoc, SmallParticle} from '@/components';
 // import MyQueryForm from '@/components/MyQueryForm';
 // import MyModal, {createModalFn} from '@/components/MyModal';
-import {useStateDeep, jsCopy} from '@/utils';
+import {useStateDeep, jsCopy, useStateDeepValue} from '@/utils';
+import {deepProxy} from '@/utils/modules/deepProxy';
 
 import {aaFn} from './test';
 import * as All from '../tsc';
 
 global.All = All;
 
-
+const testData2 = deepProxy<any[]>([]);
+window.testData2 = testData2;
 const Home: FC = (props) => {
 
+    const testData = useStateDeepValue<any[]>([]);
     const state = useStateDeep({
         hide: false,
         open: false,
@@ -38,12 +41,45 @@ const Home: FC = (props) => {
         })(),
     });
 
-    // console.log(state.list);
+    const addd = () => {
+        console.time('a');
+
+        const data = (() => {
+            const arr = [];
+            for (let index = 0; index < 200; index++) {
+                arr.push({
+                    name: 'John Brown',
+                    age: index,
+                    qwe: 'New York No. 1 Lake Park',
+                    list: [
+                        {key: 1, aa: 2},
+                        {key: 3, aa: 4},
+                    ],
+                    g: 1,
+                    children: [{age: 'qwe' + index}],
+                });
+            }
+
+            return arr;
+        })();
+
+        // state.list = [...state.list, ...data];
+        state.list.push(...data);
+        // testData2.push(...data);
+        // testData.value.push(...data);
+
+        console.timeEnd('a');
+    };
+
+    console.log('update');
 
     return (
         <div className="bbb bbb2">
             {/* <div className="bbbbb">123</div> */}
             <div onClick={() => aaFn()}>
+                123
+            </div>
+            <div onClick={() => addd()}>
                 123
             </div>
             <MyTable
@@ -138,10 +174,10 @@ const Home: FC = (props) => {
                         : <div onClick={e => onExpand(record, e)}>展开</div>;
                 }}
                 expandIconColumnIndex={0}
-                list={state.list}
+                // list={state.list}
                 // rowKey={item => item.age}
                 rowSelectChange={(ids, items) => {state.selectItems = items;}}
-                // scroll={{y: 500}}
+                scroll={{y: 500}}
                 showTopDiv={true}
             />
         </div>
