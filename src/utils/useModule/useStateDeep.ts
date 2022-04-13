@@ -3,6 +3,7 @@ import {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {useStateAutoStop} from './useStateAutoStop';
 import {deepProxy, deepValue, TCb, TCb2, TRData} from '../modules/deepProxy';
 import {throttleDebounce} from '../modules/throttleDebounce';
+import {debounce} from '../modules/debounce';
 
 /**
  * 深层变化监听, 类似 vue-reactive
@@ -15,11 +16,14 @@ import {throttleDebounce} from '../modules/throttleDebounce';
 export const useStateDeep = <T>(val: T, cb?: TCb) => {
     const [random, setRandom] = useStateAutoStop(0);
 
-    // 节流防抖函数
+    // 不需要做处理，频繁调用，react内部会处理
     const tdFun = useMemo(() => {
-        return throttleDebounce(() => {
+        // return throttleDebounce(() => {
+        //     setRandom(Date.now() + Math.random());
+        // }, 16);
+        return () => {
             setRandom(Date.now() + Math.random());
-        }, 16);
+        };
     }, []);
 
     const proxy = useMemo(() => {
@@ -41,11 +45,14 @@ export const useStateDeep = <T>(val: T, cb?: TCb) => {
 export const useStateDeepValue = <T>(val?: T, cb?: TCb2) => {
     const [random, setRandom] = useStateAutoStop(0);
 
-    // 节流防抖函数
+    // 不需要做处理，频繁调用，react内部会处理
     const tdFun = useMemo(() => {
-        return throttleDebounce(() => {
+        // return throttleDebounce(() => {
+        //     setRandom(Date.now() + Math.random());
+        // }, 16);
+        return () => {
             setRandom(Date.now() + Math.random());
-        }, 16);
+        };
     }, []);
 
     const proxy = useMemo(() => {
