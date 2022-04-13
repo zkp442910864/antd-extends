@@ -141,6 +141,7 @@ UseStateDeep.parameters = {
     docs: {
         description: {
             story: '类似于 vue3-reactive' +
+                '<br/> 有频繁触发的风险' +
                 '<br/> 深层双向绑定' +
                 '<br/> 功能是通过proxy 实现,当代理了不可代理的对象会报错(比如dom',
         },
