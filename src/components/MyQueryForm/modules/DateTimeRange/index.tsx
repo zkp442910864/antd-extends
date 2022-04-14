@@ -20,6 +20,7 @@ const DateTimeRange: FC<IProps> = ({
 }) => {
 
     const timeFormat = showFormat.split(' ')[1];
+    const isShowTime = typeof showTime === 'boolean' ? showTime : ~showFormat.indexOf('HH:mm');
 
     // 展示数据
     const setRangePickerValue = () => {
@@ -39,7 +40,11 @@ const DateTimeRange: FC<IProps> = ({
 
         if (!start || !end) {
             onChange?.('', '');
+        } else if (isShowTime) {
+            onChange?.(start.format(dateFormat), end.format(dateFormat));
         } else {
+            start.startOf('days');
+            end.endOf('days');
             onChange?.(start.format(dateFormat), end.format(dateFormat));
         }
     };
@@ -51,12 +56,14 @@ const DateTimeRange: FC<IProps> = ({
             typeof endDateTimeStr === 'object' && (endDateTimeStr as any)._isAMomentObject
         ) {
             // console.log(moment());
-            onChange?.(startDateTimeStr.format(dateFormat), endDateTimeStr.format(dateFormat));
+            // onChange?.(startDateTimeStr.format(dateFormat), endDateTimeStr.format(dateFormat));
+            rangePickerChange([startDateTimeStr, endDateTimeStr]);
         } else if (startDateTimeStr && endDateTimeStr) {
             const newStart = moment(startDateTimeStr).format(dateFormat);
             const newEnd = moment(endDateTimeStr).format(dateFormat);
             if (!(startDateTimeStr === newStart && endDateTimeStr === newEnd)) {
-                onChange?.(moment(startDateTimeStr).format(dateFormat), moment(endDateTimeStr).format(dateFormat));
+                // onChange?.(moment(startDateTimeStr).format(dateFormat), moment(endDateTimeStr).format(dateFormat));
+                rangePickerChange([moment(startDateTimeStr), moment(endDateTimeStr)]);
             }
         }
     }, [startDateTimeStr, endDateTimeStr]);
@@ -72,7 +79,7 @@ const DateTimeRange: FC<IProps> = ({
             // showTime={typeof showTime === 'boolean' ? showTime : !!~dateFormat.indexOf('HH:mm:ss')}
             format={showFormat}
             showTime={
-                typeof showTime === 'boolean' ? showTime : ~showFormat.indexOf('HH:mm')
+                isShowTime
                     ? {
                         defaultValue: [moment('00:00:00', timeFormat), moment('23:59:59', timeFormat)],
                         format: timeFormat,

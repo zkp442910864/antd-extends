@@ -395,11 +395,8 @@ const MyQueryForm: FC<IProps> = forwardRef((
         if (hideAllBtn) return (<></>);
 
         return (
-            <FormItemLoad
+            <FormItem
                 className="zzzz-btn-box"
-                delay={200}
-                indicator={<></>}
-                spinning={loading}
                 style={{float: disabledFloat ? 'initial' : 'right'}}
             >
                 <NewButton
@@ -416,7 +413,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
                     {resetText}
                 </NewButton>
                 {btnExtendFn?.()}
-            </FormItemLoad>
+            </FormItem>
         );
     };
 
