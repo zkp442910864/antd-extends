@@ -161,10 +161,12 @@ type TCbData = {
 };
 export type TCb = (cbType: 'create' | 'modify' | 'delete', obj: TCbData) => void;
 export type TCb2 = (obj: TCbData) => void;
+export type TtriggerCb = <T extends TData>(target: T, type: 'create' | 'modify' | 'delete', obj: TCbData) => void;
 
 
-const rawToProxy = new WeakMap();
-const proxyToRaw = new WeakMap();
+const rawToProxy = new WeakMap<TData, TRData>();
+const proxyToRaw = new WeakMap<TRData, TData>();
+const cbDep = new WeakMap<object, Set<TCb>>();
 
 const createProxy = <T extends TRData>(data: T, cb?: TCb) => {
 
@@ -174,8 +176,14 @@ const createProxy = <T extends TRData>(data: T, cb?: TCb) => {
             let value = Reflect.get(target, key, rawProxy);
 
             // 创建 proxy
-            if (isCopyType(value) && !proxyToRaw.has(value) && key !== '_raw') {
-                value = !rawToProxy.has(value) ? createProxy(value, cb) : rawToProxy.get(value);
+            if (key === '_raw') {
+                // 不处理
+            } else if (isCopyType(value) && proxyToRaw.has(value)) {
+                // 加入 回调
+                const s = cbDep.get(value);
+                cb && s?.add(cb);
+            } else if (isCopyType(value)) {
+                value = rawToProxy.get(value) || createProxy(value, cb);
             }
 
             return value;
@@ -192,7 +200,7 @@ const createProxy = <T extends TRData>(data: T, cb?: TCb) => {
             // console.log(key);
 
             const cbType = (target as any)[key] === undefined ? 'create' : 'modify';
-            cb?.(cbType, {target, key, value, raw});
+            triggerCb(target, cbType, {target, key, value, raw});
 
             return v;
         },
@@ -200,31 +208,43 @@ const createProxy = <T extends TRData>(data: T, cb?: TCb) => {
 
             // delete rawObj[key];
             const v = Reflect.deleteProperty(target, key);
-            cb?.('delete', {target, key});
+            // cb?.('delete', {target, key});
+            triggerCb(target, 'delete', {target, key});
 
             return v;
         },
     });
 
-    rawToProxy.set(data, proxy);
-    proxyToRaw.set(proxy, data);
-
     Object.defineProperties(proxy, {
         _raw: {
-            // writable: false,
             enumerable: false,
             get () {
                 return toRaw(proxy);
             },
         },
-        // _isProxy: {
-        //     // writable: false,
-        //     enumerable: false,
-        //     value: true,
-        // },
     });
+    // Reflect.deleteProperty(proxy, '_raw', )
+
+    rawToProxy.set(data, proxy);
+    proxyToRaw.set(proxy, data);
+
+    // 收集用
+    const set = new Set<TCb>();
+    cbDep.set(data, set);
+    cbDep.set(proxy, set);
+    cb && set.add(cb);
 
     return proxy;
+};
+
+// 触发回调
+const triggerCb: TtriggerCb = (target, type, obj) => {
+    const set = cbDep.get(target);
+    if (!set) return;
+
+    for (const fn of set) {
+        fn(type, obj);
+    }
 };
 
 export const toRaw = <T extends TRData>(data: T) => {
