@@ -19,6 +19,26 @@ const Aa = ({
         open: true,
         loading: false,
         other: {},
+        list: (() => {
+            const arr = [];
+            for (let index = 0; index < 1; index++) {
+                arr.push({
+                    name: 'John Brown',
+                    age: index,
+                    qwe: 'New York No. 1 Lake Park',
+                    list: [
+                        {key: 1, aa: 2},
+                        {key: 3, aa: 4},
+                    ],
+                    asdad: {a: 1},
+                    asdad2: [{a: 1}],
+                    g: 1,
+                    children: [{age: 'qwe' + index}],
+                });
+            }
+
+            return arr;
+        })(),
     });
 
     // 向上处理
@@ -70,6 +90,10 @@ const Aa = ({
             onCancel={() => {
                 state.open = false;
                 no();
+            }}
+            onOk={() => {
+                state.open = false;
+                yes(state.list);
             }}
         >
             {({maxHeight}) => (
@@ -238,7 +262,7 @@ const Aa = ({
                     disabledPage={true}
                     expandIconColumnIndex={0}
                     // list={list.value}
-                    list={list.value}
+                    list={state.list}
                     rowKey="Id"
                     scroll={{y: maxHeight - 100}}
                 />

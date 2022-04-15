@@ -24,7 +24,7 @@ const Home: FC = (props) => {
         selectItems: [] as any[],
         list: (() => {
             const arr = [];
-            for (let index = 0; index < 100; index++) {
+            for (let index = 0; index < 1; index++) {
                 arr.push({
                     name: 'John Brown',
                     age: index,
@@ -49,7 +49,7 @@ const Home: FC = (props) => {
 
         const data = (() => {
             const arr = [];
-            for (let index = 0; index < 200; index++) {
+            for (let index = 0; index < 100; index++) {
                 arr.push({
                     name: 'John Brown',
                     age: index,
@@ -58,8 +58,9 @@ const Home: FC = (props) => {
                         {key: 1, aa: 2},
                         {key: 3, aa: 4},
                     ],
-                    g: 1,
                     asdad: {a: 1},
+                    asdad2: [{a: 1}],
+                    g: 1,
                     children: [{age: 'qwe' + index}],
                 });
             }
@@ -90,7 +91,13 @@ const Home: FC = (props) => {
     return (
         <div className="bbb bbb2">
             {/* <div className="bbbbb">123</div> */}
-            <div onClick={() => aaFn()}>
+            <div
+                onClick={async () => {
+                    const data = await aaFn();
+                    console.log(data);
+                    state.list.push(...data);
+                }}
+            >
                 123
             </div>
             <div onClick={() => addd()}>
@@ -128,13 +135,13 @@ const Home: FC = (props) => {
                                         k
                                     </div>
                                     <div>
-                                        {/* <input
-                                            value={item.g}
+                                        <Input
+                                            value={item.g2}
                                             onChange={(e) => {
                                                 console.log(e.target.value);
-                                                item.g = e.target.value;
+                                                item.g2 = e.target.value;
                                             }}
-                                        /> */}
+                                        />
                                         <SmallParticle
                                             item={item}
                                             vmodel="g"

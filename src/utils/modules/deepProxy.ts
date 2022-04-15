@@ -181,7 +181,7 @@ const createProxy = <T extends TRData>(data: T, cb?: TCb) => {
             } else if (isCopyType(value) && proxyToRaw.has(value)) {
                 // 加入 回调
                 const s = cbDep.get(value);
-                cb && s?.add(cb);
+                cb && !s?.has(cb) && s?.add(cb);
             } else if (isCopyType(value)) {
                 value = rawToProxy.get(value) || createProxy(value, cb);
             }
@@ -190,14 +190,19 @@ const createProxy = <T extends TRData>(data: T, cb?: TCb) => {
         },
         set (target, key, value, raw) {
 
-            // 找出对应的 proxy
-            // if (isCopyType(value) && rawToProxy.has(target)) {
-            //     // target = rawToProxy.get(target);
-            //     debugger;
-            // }
+            // 转换回原生对象，进行赋值
+            if (proxyToRaw.has(value)) {
+                value = proxyToRaw.get(value);
+            }
 
             const v = Reflect.set(target, key, value, raw);
             // console.log(key);
+
+            // 加入 回调
+            if (rawToProxy.has(value) && cb) {
+                const s = cbDep.get(value);
+                !s?.has(cb) && s?.add(cb);
+            }
 
             const cbType = (target as any)[key] === undefined ? 'create' : 'modify';
             triggerCb(target, cbType, {target, key, value, raw});
@@ -262,10 +267,11 @@ export const deepProxy2 = <T extends TRData = any>(
     return proxy;
 };
 
-// window.deepProxy2 = deepProxy2;
-// window.test = {
-//     rawToProxy,
-//     proxyToRaw,
-//     toRaw,
-// };
+window.deepProxy2 = deepProxy2;
+window.test = {
+    rawToProxy,
+    proxyToRaw,
+    toRaw,
+    cbDep,
+};
 
