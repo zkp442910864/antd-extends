@@ -5,15 +5,16 @@ import {AsyncTreeSelect, AsyncSelect, MyTable, renderSelectionCellFn, spinHoc, S
 // import MyQueryForm from '@/components/MyQueryForm';
 // import MyModal, {createModalFn} from '@/components/MyModal';
 import {useStateDeep, jsCopy, useStateDeepValue} from '@/utils';
-import {deepProxy} from '@/utils/modules/deepProxy';
+import {deepProxy, deepProxy2} from '@/utils/modules/deepProxy';
 
 import {aaFn} from './test';
 import * as All from '../tsc';
 
 global.All = All;
 
-const testData2 = deepProxy<any[]>([]);
-window.testData2 = testData2;
+// const testData2 = deepProxy2<any[]>([]);
+// const testData2 = deepProxy<any[]>([]);
+// window.testData2 = testData2;
 const Home: FC = (props) => {
 
     const testData = useStateDeepValue<any[]>([]);
@@ -23,7 +24,7 @@ const Home: FC = (props) => {
         selectItems: [] as any[],
         list: (() => {
             const arr = [];
-            for (let index = 0; index < 200; index++) {
+            for (let index = 0; index < 100; index++) {
                 arr.push({
                     name: 'John Brown',
                     age: index,
@@ -71,7 +72,17 @@ const Home: FC = (props) => {
         console.timeEnd('a');
     };
 
-    console.log('update');
+    const addd2 = () => {
+        state.list.forEach((item) => {
+            // item.age = 333;
+            Object.assign(item, {
+                age: 333,
+                name: '1111',
+            });
+        });
+    };
+
+    console.log('update', state);
 
     return (
         <div className="bbb bbb2">
@@ -80,6 +91,9 @@ const Home: FC = (props) => {
                 123
             </div>
             <div onClick={() => addd()}>
+                123
+            </div>
+            <div onClick={() => addd2()}>
                 123
             </div>
             <MyTable
@@ -174,7 +188,7 @@ const Home: FC = (props) => {
                         : <div onClick={e => onExpand(record, e)}>展开</div>;
                 }}
                 expandIconColumnIndex={0}
-                // list={state.list}
+                list={state.list}
                 // rowKey={item => item.age}
                 rowSelectChange={(ids, items) => {state.selectItems = items;}}
                 scroll={{y: 500}}

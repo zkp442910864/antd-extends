@@ -136,28 +136,6 @@ export const deepValue = <T extends TData = TData>(val: T, cb?: TCb2) => {
     return proxy;
 };
 
-/**
- * 把数据指向 原生对象的位置
- *
- * 主要针对连续赋值，且赋值的是同一对象的情况
- * @param raw 存储原生对象
- * @param rawKey 存储key
- * @param data 数据源
- */
-const deepRaw = (raw: any, rawKey: string | symbol, data: {[x: string]: any;}) => {
-    if (!isCopyType(data)) return;
-
-    // const newObj = Array.isArray(data) ? [] : {};
-
-    for (const key in data) {
-        const item = data[key];
-        if (item._raw && item._isProxy) {
-            data[key] = item._raw;
-        }
-    }
-};
-
-
 type TObj = {[key: string | number | symbol]: any};
 type TArr = any[];
 type TData = TObj | TArr;
@@ -183,3 +161,90 @@ type TCbData = {
 };
 export type TCb = (cbType: 'create' | 'modify' | 'delete', obj: TCbData) => void;
 export type TCb2 = (obj: TCbData) => void;
+
+
+const rawToProxy = new WeakMap();
+const proxyToRaw = new WeakMap();
+
+const createProxy = <T extends TRData>(data: T, cb?: TCb) => {
+
+    const proxy = new Proxy(data, {
+
+        get (target, key, rawProxy) {
+            let value = Reflect.get(target, key, rawProxy);
+
+            // 创建 proxy
+            if (isCopyType(value) && key !== '_raw') {
+                value = !rawToProxy.has(value) ? createProxy(value, cb) : rawToProxy.get(value);
+            }
+
+            return value;
+        },
+        set (target, key, value, raw) {
+
+            // 找出对应的 proxy
+            // if (isCopyType(value) && rawToProxy.has(target)) {
+            //     // target = rawToProxy.get(target);
+            //     debugger;
+            // }
+
+            const v = Reflect.set(target, key, value, raw);
+            // console.log(key);
+
+            const cbType = (target as any)[key] === undefined ? 'create' : 'modify';
+            cb?.(cbType, {target, key, value, raw});
+
+            return v;
+        },
+        deleteProperty (target, key) {
+
+            // delete rawObj[key];
+            const v = Reflect.deleteProperty(target, key);
+            cb?.('delete', {target, key});
+
+            return v;
+        },
+    });
+
+    rawToProxy.set(data, proxy);
+    proxyToRaw.set(proxy, data);
+
+    Object.defineProperties(proxy, {
+        _raw: {
+            // writable: false,
+            enumerable: false,
+            get () {
+                return toRaw(proxy);
+            },
+        },
+        // _isProxy: {
+        //     // writable: false,
+        //     enumerable: false,
+        //     value: true,
+        // },
+    });
+
+    return proxy;
+};
+
+export const toRaw = <T extends TRData>(data: T) => {
+    return proxyToRaw.get(data);
+};
+
+export const deepProxy2 = <T extends TRData = any>(
+    data: T,
+    cb?: TCb,
+) => {
+    // 代理第一层 proxy
+    const proxy = createProxy(data, cb);
+
+    return proxy;
+};
+
+// window.deepProxy2 = deepProxy2;
+// window.test = {
+//     rawToProxy,
+//     proxyToRaw,
+//     toRaw,
+// };
+

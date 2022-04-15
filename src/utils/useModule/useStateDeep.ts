@@ -2,7 +2,7 @@
 import {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 
 import {useStateAutoStop} from './useStateAutoStop';
-import {deepProxy, deepValue, TCb, TCb2, TRData} from '../modules/deepProxy';
+import {deepProxy, deepProxy2, deepValue, TCb, TCb2, TRData} from '../modules/deepProxy';
 import {throttleDebounce} from '../modules/throttleDebounce';
 
 /**
@@ -16,18 +16,17 @@ import {throttleDebounce} from '../modules/throttleDebounce';
 export const useStateDeep = <T>(val: T, cb?: TCb) => {
     const [random, setRandom] = useStateAutoStop(0);
 
-    // 不需要做处理，频繁调用，react内部会处理
     const tdFun = useMemo(() => {
-        return throttleDebounce(() => {
-            setRandom(Date.now() + Math.random());
-        }, 0);
-        // return () => {
+        // return throttleDebounce(() => {
         //     setRandom(Date.now() + Math.random());
-        // };
+        // }, 0);
+        return () => {
+            setRandom(Date.now() + Math.random());
+        };
     }, []);
 
     const proxy = useMemo(() => {
-        return deepProxy(val, (...arg) => {
+        return deepProxy2(val, (...arg) => {
             cb?.(...arg);
             tdFun();
             // window.requestAnimationFrame(tdFun);
@@ -46,14 +45,13 @@ export const useStateDeep = <T>(val: T, cb?: TCb) => {
 export const useStateDeepValue = <T>(val: T, cb?: TCb2) => {
     const [random, setRandom] = useStateAutoStop(0);
 
-    // 不需要做处理，频繁调用，react内部会处理
     const tdFun = useMemo(() => {
-        return throttleDebounce(() => {
-            setRandom(Date.now() + Math.random());
-        }, 16);
-        // return () => {
+        // return throttleDebounce(() => {
         //     setRandom(Date.now() + Math.random());
-        // };
+        // }, 16);
+        return () => {
+            setRandom(Date.now() + Math.random());
+        };
     }, []);
 
     const proxy = useMemo(() => {
