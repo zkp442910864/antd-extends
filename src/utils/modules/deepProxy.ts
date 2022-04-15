@@ -248,7 +248,8 @@ const triggerCb: TtriggerCb = (target, type, obj) => {
 };
 
 export const toRaw = <T extends TRData>(data: T) => {
-    return proxyToRaw.get(data) || data;
+    const val = proxyToRaw.get(data) || data;
+    return val as T;
 };
 
 export const deepProxy2 = <T extends TRData = any>(
