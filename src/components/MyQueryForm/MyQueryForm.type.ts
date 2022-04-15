@@ -160,6 +160,10 @@ export interface IConfigBase {
      * 样式
      */
     style?: React.CSSProperties;
+    /**
+     * 控件对应的props
+     */
+    moduleProps?: TObj;
 }
 
 

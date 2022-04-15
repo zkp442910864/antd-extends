@@ -33,6 +33,8 @@ const Home: FC = (props) => {
                         {key: 1, aa: 2},
                         {key: 3, aa: 4},
                     ],
+                    asdad: {a: 1},
+                    asdad2: [{a: 1}],
                     g: 1,
                     children: [{age: 'qwe' + index}],
                 });
@@ -57,6 +59,7 @@ const Home: FC = (props) => {
                         {key: 3, aa: 4},
                     ],
                     g: 1,
+                    asdad: {a: 1},
                     children: [{age: 'qwe' + index}],
                 });
             }
@@ -108,13 +111,13 @@ const Home: FC = (props) => {
 
                             return (
                                 <>
-                                    {
+                                    {/* {
                                         (item.qq ? item.list : item.list?.slice?.(0, 1))?.map?.((item: any) => {
                                             return (
                                                 <div key={item.key}>{item.aa}</div>
                                             );
                                         })
-                                    }
+                                    } */}
                                     <div
                                         onClick={() => {
                                             item.qq = !item.qq;

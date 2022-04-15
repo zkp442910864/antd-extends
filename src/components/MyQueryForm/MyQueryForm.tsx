@@ -169,6 +169,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
                     //     const str = e.target.value || '';
                     //     handle.itemChange(str.trim(), data.vmodel, [e, data]);
                     // }}
+                    {...(item.moduleProps || {})}
                     {...otherAttr}
                 />
             ),
@@ -177,6 +178,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
                     allowClear={!!item.clearable}
                     placeholder={handle.placeholder(item)}
                     style={handle.width(item.width)}
+                    {...(item.moduleProps || {})}
                     {...otherAttr}
                 />
             ),
@@ -184,6 +186,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
                 <DateTimeRange
                     allowClear={!!item.clearable}
                     style={handle.width(item.width)}
+                    {...(item.moduleProps || {})}
                     {...otherAttr}
                 />
             ),
@@ -192,6 +195,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
                     allowClear={!!item.clearable}
                     placeholder={handle.placeholder(item)}
                     style={handle.width(item.width)}
+                    {...(item.moduleProps || {})}
                     {...otherAttr}
                 />
             ),
@@ -200,6 +204,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
                     // allowClear={!!item.clearable}
                     // placeholder={handle.placeholder(item)}
                     style={handle.width(item.width)}
+                    {...(item.moduleProps || {})}
                     {...otherAttr}
                 />
             ),

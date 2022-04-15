@@ -174,7 +174,7 @@ const createProxy = <T extends TRData>(data: T, cb?: TCb) => {
             let value = Reflect.get(target, key, rawProxy);
 
             // 创建 proxy
-            if (isCopyType(value) && key !== '_raw') {
+            if (isCopyType(value) && !proxyToRaw.has(value) && key !== '_raw') {
                 value = !rawToProxy.has(value) ? createProxy(value, cb) : rawToProxy.get(value);
             }
 
