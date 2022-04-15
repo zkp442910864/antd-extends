@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {InputProps} from 'antd/lib/input';
 
 import {toast} from './toast';
-import {useStateDeep, empty, jsCopy} from '../utils';
+import {useStateDeep, empty, jsCopy, toRaw} from '../utils';
 import {MyModal, InputTrim, createModalFn} from '../components';
 import {IPropsModalFn, IProps as IMyModalProps} from '../components/MyModal/MyModal.type';
 
@@ -32,7 +32,7 @@ const Prompt: FC<IPrompt & IPropsModalFn & IMyModalProps> = ({
         if (state.loading) return;
 
         const value = state.value;
-        const otherData = state.otherData?._raw;
+        const otherData = toRaw(state.otherData);
         let res: any;
 
         if (customFn) {

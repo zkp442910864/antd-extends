@@ -3,7 +3,7 @@ import {Select, Spin} from 'antd';
 // import moment from 'moment';
 import {SelectProps, LabeledValue} from 'antd/lib/select';
 
-import {useStateDeep, useDebounceEffect, empty} from '../../../../utils';
+import {useStateDeep, useDebounceEffect, empty, toRaw} from '../../../../utils';
 
 import {IProps, TObj, TText, TRequestApi} from './index.type';
 
@@ -125,7 +125,7 @@ const AsyncSelect: FC<IProps> = ({
             keyArr.forEach((keyItem) => {
                 const valItem = cache[keyItem.key];
                 keyArr.push(keyItem);
-                valArr.push(valItem._raw);
+                valArr.push(toRaw(valItem));
             });
             onChange?.(keyArr, valArr);
         } else if (Array.isArray(indes)) {
@@ -134,16 +134,16 @@ const AsyncSelect: FC<IProps> = ({
             (indes as TText[]).forEach((key) => {
                 const val = cache[key];
                 keyArr.push(key);
-                valArr.push(val._raw);
+                valArr.push(toRaw(val));
             });
             onChange?.(keyArr, valArr);
         } else if (typeof indes === 'object') {
             const val = cache[indes.key];
-            onChange?.(indes, val._raw);
+            onChange?.(indes, toRaw(val));
         } else {
             const key = indes;
             const val = cache[key];
-            onChange?.(key, val._raw);
+            onChange?.(key, toRaw(val));
         }
 
     };

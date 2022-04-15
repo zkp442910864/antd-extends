@@ -228,7 +228,7 @@ const createProxy = <T extends TRData>(data: T, cb?: TCb) => {
 };
 
 export const toRaw = <T extends TRData>(data: T) => {
-    return proxyToRaw.get(data);
+    return proxyToRaw.get(data) || data;
 };
 
 export const deepProxy2 = <T extends TRData = any>(

@@ -7,3 +7,4 @@ export * from './checkVal';
 export * from './throttleDebounce';
 export * from './concurrentAjax';
 export * from './cacheAjax';
+export * from './deepProxy';

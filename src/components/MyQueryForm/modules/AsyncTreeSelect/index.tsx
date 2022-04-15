@@ -2,7 +2,7 @@ import React, {createRef, FC, useEffect} from 'react';
 import {Spin, TreeSelect} from 'antd';
 import {TreeSelectProps} from 'antd/lib/tree-select';
 
-import {useStateDeep, useDebounceEffect, jsCopy} from '../../../../utils';
+import {useStateDeep, useDebounceEffect, jsCopy, toRaw} from '../../../../utils';
 import {IProps, TObj, TText} from './index.type';
 
 export * from './index.type';
@@ -135,11 +135,11 @@ const AsyncTreeSelect: FC<IProps> = ({
         if (Array.isArray(val)) {
             const items: TObj[] = [];
             val.forEach((key) => {
-                items.push(state.cache[key]._raw);
+                items.push(toRaw(state.cache[key]));
             });
             onChange?.(val, items, {val, label, extra});
         } else {
-            onChange?.(val, state.cache[val]?._raw, {val, label, extra});
+            onChange?.(val, toRaw(state.cache[val]), {val, label, extra});
         }
     };
 

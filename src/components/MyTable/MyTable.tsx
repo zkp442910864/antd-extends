@@ -6,7 +6,7 @@ import {AffixProps} from 'antd/lib/affix';
 
 import globalConfig from '../config';
 import Exhibit from '../Exhibit';
-import {useStateDeep, useDebounceEffect, empty, sleep, useStateDeepValue, emptyArray, jsCopy} from '../../utils';
+import {useStateDeep, useDebounceEffect, empty, sleep, useStateDeepValue, emptyArray, jsCopy, toRaw} from '../../utils';
 import {lockTableHeadFn} from './modules/lockTableHeadFn';
 import {TObj, TResData, TOrderBy, IProps, IColumn, TText, EOrderMap, TableRef} from './MyTable.type';
 import './MyTable.less';
@@ -395,7 +395,7 @@ const MyTable: FC<IProps> = forwardRef((
                             } else if (isStaticData) {
                                 staticList.value = [...staticList.value!];
                             } else {
-                                state.ajaxList = [...(state.ajaxList as any)._raw];
+                                state.ajaxList = [...toRaw(state.ajaxList)];
                             }
                         };
                         return oldRender(text, item, index, forceUpdate);

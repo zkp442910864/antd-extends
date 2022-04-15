@@ -3,6 +3,7 @@ import {ComponentStory, ComponentMeta} from '@storybook/react';
 import {Spin} from 'antd';
 // import {} from '@storybook/addon-docs';
 
+import {toRaw} from '../modules';
 import {useDebounceEffect, useDebounceFn, useRequire, useStateAutoStop, useStateDeep, useStateDeepValue} from './index';
 
 export default {
@@ -132,7 +133,7 @@ export const UseStateDeep = () => {
     return (
         <div>
             <button onClick={() => (state.val = Math.random())}>toggle{state.val}</button>
-            <button onClick={() => {console.log(state, state._raw);}}>原生对象</button>
+            <button onClick={() => {console.log(state, toRaw(state));}}>原生对象</button>
         </div>
     );
 };
