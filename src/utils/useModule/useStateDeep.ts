@@ -2,8 +2,10 @@
 import {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 
 import {useStateAutoStop} from './useStateAutoStop';
-import {deepProxy, deepProxy2, deepValue, TCb, TCb2, TRData} from '../modules/deepProxy';
+import {deepValue, TCb, TCb2, TRData} from '../modules/deepProxy';
+import {deepProxy} from '../modules/deepProxyNew';
 import {throttleDebounce} from '../modules/throttleDebounce';
+import {debounce} from '../modules/debounce';
 
 /**
  * 深层变化监听, 类似 vue-reactive
@@ -20,15 +22,19 @@ export const useStateDeep = <T>(val: T, cb?: TCb) => {
         // return throttleDebounce(() => {
         //     setRandom(Date.now() + Math.random());
         // }, 0);
-        return () => {
+        return debounce((...arg: any) => {
+            console.log('debounce', arg);
             setRandom(Date.now() + Math.random());
-        };
+        }, 0);
+        // return () => {
+        //     setRandom(Date.now() + Math.random());
+        // };
     }, []);
 
     const proxy = useMemo(() => {
-        return deepProxy2(val, (...arg) => {
+        return deepProxy(val, (...arg) => {
             cb?.(...arg);
-            tdFun();
+            tdFun(...arg);
             // window.requestAnimationFrame(tdFun);
         });
     }, []);

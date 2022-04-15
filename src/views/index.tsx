@@ -24,7 +24,7 @@ const Home: FC = (props) => {
         selectItems: [] as any[],
         list: (() => {
             const arr = [];
-            for (let index = 0; index < 1; index++) {
+            for (let index = 0; index < 0; index++) {
                 arr.push({
                     name: 'John Brown',
                     age: index,
