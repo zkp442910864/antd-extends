@@ -1,8 +1,8 @@
-import React, {FC} from 'react';
+import React, {FC, useRef, useEffect} from 'react';
 import {InputProps} from 'antd/lib/input';
 
 import {toast} from './toast';
-import {useStateDeep, empty, jsCopy, toRaw} from '../utils';
+import {useStateDeep, empty, jsCopy, toRaw, useDebounceEffect} from '../utils';
 import {MyModal, InputTrim, createModalFn} from '../components';
 import {IPropsModalFn, IProps as IMyModalProps} from '../components/MyModal/MyModal.type';
 
@@ -16,6 +16,7 @@ const Prompt: FC<IPrompt & IPropsModalFn & IMyModalProps> = ({
     ...modalProps
 }) => {
 
+    const ref = useRef<any>(null);
     const state = useStateDeep({
         open: true,
         loading: false,
@@ -53,6 +54,14 @@ const Prompt: FC<IPrompt & IPropsModalFn & IMyModalProps> = ({
         state.open = false;
     };
 
+    useDebounceEffect(() => {
+        if (ref.current) {
+            // console.log(ref.current);
+            ref.current?.focus();
+            // ref.current?.input?.focus();
+        }
+    }, [ref.current]);
+
     return (
         <MyModal
             closable={false}
@@ -70,10 +79,11 @@ const Prompt: FC<IPrompt & IPropsModalFn & IMyModalProps> = ({
         >
             {
                 customJSX
-                    ? customJSX(state.value, change)
+                    ? customJSX(state.value, change, ref)
                     : (
                         <InputTrim
                             {...inputProps}
+                            ref={ref}
                             value={state.value}
                             onChange={change}
                         />
@@ -114,8 +124,10 @@ export interface IPrompt {
     inputProps?: Omit<InputProps, 'value' | 'onChange'>,
     /**
      * 自定义JSX
+     *
+     * ref 用来获取组件实例, 自动焦点
      */
-    customJSX?: (value: TValue, change: TChange) => JSX.Element,
+    customJSX?: (value: TValue, change: TChange, ref: React.MutableRefObject<any>) => JSX.Element,
     /**
      * 自定义异步函数
      *

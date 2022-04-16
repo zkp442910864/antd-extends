@@ -4,6 +4,7 @@ import {InputProps} from 'antd/lib/input';
 
 export type TProps = Omit<InputProps, 'onChange'> & {
     onChange?: (val?: string) => void;
+    ref?: any;
     // onBlur: (val?: string) => void;
 };
 

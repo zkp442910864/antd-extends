@@ -64,9 +64,14 @@ export const PromptFn = () => {
             // title: 'qwe',
             // closable: true,
             loadingDisableClose: true,
-            customJSX: (value, change) => {
+            customJSX: (value, change, ref) => {
                 return (
-                    <InputNumber style={{width: '100%'}} value={value} onChange={(e) => change(e)} />
+                    <InputNumber
+                        ref={ref}
+                        style={{width: '100%'}}
+                        value={value}
+                        onChange={(e) => change(e)}
+                    />
                     // <div>12312</div>
                 );
             },
