@@ -24,8 +24,8 @@ const NumberRang: FC<IProps> = ({
     // const state = useStateDeep({});
 
     const toNum = (val: number | string | undefined) => {
-        if (typeof val === 'undefined' || val === '') return undefined;
-        return +val;
+        if (empty(val)) return undefined;
+        return +(val as number);
     };
 
     const change = (key: string, value?: number) => {
