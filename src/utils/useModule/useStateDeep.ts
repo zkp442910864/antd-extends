@@ -23,7 +23,7 @@ export const useStateDeep = <T>(val: T, cb?: TCb) => {
         //     setRandom(Date.now() + Math.random());
         // }, 0);
         return debounce((...arg: any) => {
-            console.log('debounce', arg);
+            // console.log('debounce', arg);
             setRandom(Date.now() + Math.random());
         }, 0);
         // return () => {

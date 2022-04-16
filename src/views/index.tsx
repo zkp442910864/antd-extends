@@ -24,7 +24,7 @@ const Home: FC = (props) => {
         selectItems: [] as any[],
         list: (() => {
             const arr = [];
-            for (let index = 0; index < 0; index++) {
+            for (let index = 0; index < 20; index++) {
                 arr.push({
                     name: 'John Brown',
                     age: index,
@@ -36,7 +36,7 @@ const Home: FC = (props) => {
                     asdad: {a: 1},
                     asdad2: [{a: 1}],
                     g: 1,
-                    children: [{age: 'qwe' + index}],
+                    children: [{age: 'qwe' + index}, {age: 'qwe2' + index}],
                 });
             }
 
@@ -61,7 +61,7 @@ const Home: FC = (props) => {
                     asdad: {a: 1},
                     asdad2: [{a: 1}],
                     g: 1,
-                    children: [{age: 'qwe' + index}],
+                    children: [{age: 'qwe' + index}, {age: 'qwe2' + index}],
                 });
             }
 
@@ -107,6 +107,7 @@ const Home: FC = (props) => {
                 123
             </div>
             <MyTable
+                autoSelectChild={true}
                 columns={[
                     {title: 'Name', dataIndex: 'name'},
                     {title: 'Age', dataIndex: 'age'},
@@ -200,8 +201,11 @@ const Home: FC = (props) => {
                 expandIconColumnIndex={0}
                 list={state.list}
                 // rowKey={item => item.age}
-                rowSelectChange={(ids, items) => {state.selectItems = items;}}
-                scroll={{y: 500}}
+                rowSelectChange={(ids, items) => {
+                    console.log(items);
+                    state.selectItems = items;
+                }}
+                // scroll={{y: 500}}
                 showTopDiv={true}
             />
         </div>

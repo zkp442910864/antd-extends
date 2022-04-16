@@ -155,11 +155,16 @@ export interface IProps<T = TObj> extends Omit<TableProps<T>, 'columns'> {
      */
     showTopDiv?: boolean;
     /**
-     * lockHead lockHeadFixedTop lockHeadJudgeFixedTop
-     *  这三个是锁表头用的
+     * 开启锁表头
      */
     lockHead?: boolean;
+    /**
+     * 页面顶部 header 高度
+     */
     lockHeadFixedTop?: number;
+    /**
+     * 判断页面顶部 header 是否存在
+     */
     lockHeadJudgeFixedTop?:(dom: HTMLElement) => boolean;
     /**
      * 请求接口

@@ -8,6 +8,7 @@ import globalConfig from '../config';
 import Exhibit from '../Exhibit';
 import {useStateDeep, useDebounceEffect, empty, sleep, useStateDeepValue, emptyArray, jsCopy, toRaw} from '../../utils';
 import {lockTableHeadFn} from './modules/lockTableHeadFn';
+import {setCascadeChoice} from './modules/cascadeChoice';
 import {TObj, TResData, TOrderBy, IProps, IColumn, TText, EOrderMap, TableRef} from './MyTable.type';
 import './MyTable.less';
 
@@ -49,6 +50,7 @@ const MyTable: FC<IProps> = forwardRef((
         disabledPage,
         handleColumnItemConfig,
         handlePageConfig,
+        // handleRowSelectionConfig,
         columns = [],
         disableRowFn,
         defaultSort,
@@ -85,6 +87,8 @@ const MyTable: FC<IProps> = forwardRef((
     const staticList = useStateDeepValue<TObj[]>([]);
     // 单独放出来, 防止污染数据
     const cache = useStateDeepValue<TObj>({});
+    // 父级映射, 子级找父级用
+    const parentCache = useStateDeepValue<TObj>({});
     const state = useStateDeep({
         domId: `table-${Date.now()}-${parseInt(`${Math.random() * 10000000}`, 10)}`,
         domChildId: `table-child-${Date.now()}-${parseInt(`${Math.random() * 10000000}`, 10)}`,
@@ -148,6 +152,7 @@ const MyTable: FC<IProps> = forwardRef((
         },
         list: () => {
             cache.value = {};
+            parentCache.value = {};
             state.current = 1;
             state.listTotal = 0;
             state.ajaxList = [];
@@ -222,21 +227,30 @@ const MyTable: FC<IProps> = forwardRef((
             const childKey = childrenColumnName;
             const getRowKey = tableHandleFn.handleRowKey();
             // debugger;
-            const handle = (list: TObj[], cache: TObj) => {
+            const handle = (list: TObj[], cache: TObj, parentCache: TObj, parentItem?: TObj) => {
                 list.forEach((item) => {
                     const key = getRowKey(item);
+                    // 键值映射
                     cache[key] = item;
+
+                    // 子级key：父级数据
+                    if (parentItem) {
+                        parentCache[key] = parentItem;
+                    }
 
                     const child = item[childKey];
                     if (child && child.length) {
-                        handle(child, cache);
+                        handle(child, cache, parentCache, item);
                     }
                 });
             };
 
             const newCache: TObj = {};
-            handle(data, newCache);
+            const newParentCache: TObj = {};
+            handle(data, newCache, newParentCache);
+
             cache.value = newCache;
+            parentCache.value = newParentCache;
         },
         // 组合参数, 并返回
         jointParamsData: (page?: number, pageSize?: number, sort?: TOrderBy, outData?: TObj) => {
@@ -482,36 +496,6 @@ const MyTable: FC<IProps> = forwardRef((
                     state.selectRowItems = items;
                     // rowSelectChange?.(keys, items);
                 },
-                onSelect: (item, selected) => {
-                    // console.log(2);
-                    // console.log(selected);
-
-                    const childKey = childrenColumnName;
-                    const children: TObj[] = item[childKey];
-                    if (!selected || !autoSelectChild || !(children && children.length)) return;
-
-                    const getRowKey = tableHandleFn.handleRowKey();
-                    const handle = (list: TObj[], keyArr: TText[], itemArr: TObj[]) => {
-                        list.forEach((item) => {
-                            const key = getRowKey(item);
-                            const child = item[childKey];
-
-                            if (!~keyArr.indexOf(key) && !~itemArr.indexOf(item)) {
-                                keyArr.push(key);
-                                itemArr.push(item);
-                            }
-                            if (child && child.length) {
-                                handle(child, keyArr, itemArr);
-                            }
-                        });
-                    };
-
-                    const newKeys = state.selectRowKeys;
-                    const newItems = state.selectRowItems;
-                    handle(children, newKeys, newItems);
-
-                    // rowSelectChange?.(state.selectRowKeys, state.selectRowItems);
-                },
                 selectedRowKeys: sRowKeys,
                 columnWidth: sWidth,
                 getCheckboxProps: (item) => {
@@ -524,6 +508,31 @@ const MyTable: FC<IProps> = forwardRef((
                     };
                 },
             };
+
+            if (autoSelectChild) {
+                obj.onSelect = (item, selected, selectedRows) => {
+                    // console.log(2);
+                    // console.log(item, selected, selectedRows, parentCache.value);
+                    const newArr = setCascadeChoice({
+                        item,
+                        selected,
+                        selectRowKeys: state.selectRowKeys,
+                        childrenColumnName,
+                        parentCache: parentCache.value,
+                        getRowKey: tableHandleFn.handleRowKey(),
+                    });
+
+                    // console.log(newArr);
+
+                    state.selectRowKeys = newArr;
+                    state.selectRowItems = newArr.map((key) => {
+                        return cache.value[key];
+                    });
+
+                };
+            }
+
+            // handleRowSelectionConfig?.(cache, state, childrenColumnName, autoSelectChild, tableHandleFn, sRowKeys, sWidth, disableRowFn);
 
             return obj;
         },
@@ -602,6 +611,7 @@ const MyTable: FC<IProps> = forwardRef((
         } else {
             staticList.value = [];
             cache.value = {};
+            parentCache.value = {};
         }
     }, [list, list?.length]);
 
