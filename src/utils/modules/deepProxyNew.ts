@@ -44,8 +44,8 @@ const createProxy = <T extends TData>(data: T, cb?: TCb) => {
                 value = proxyToRaw.get(value);
             } else if (Array.isArray(value)) {
                 value.forEach((item, index) => {
-                    const newItem = proxyToRaw.has(item);
-                    if (newItem) {
+                    if (proxyToRaw.has(item)) {
+                        const newItem = proxyToRaw.get(item);
                         value[index] = newItem;
                     }
                 });
