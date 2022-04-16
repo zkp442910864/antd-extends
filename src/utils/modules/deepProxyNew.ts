@@ -42,6 +42,13 @@ const createProxy = <T extends TData>(data: T, cb?: TCb) => {
             // 转换回原生对象，进行赋值
             if (proxyToRaw.has(value)) {
                 value = proxyToRaw.get(value);
+            } else if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    const newItem = proxyToRaw.has(item);
+                    if (newItem) {
+                        value[index] = newItem;
+                    }
+                });
             }
 
             const v = Reflect.set(target, key, value, raw);
