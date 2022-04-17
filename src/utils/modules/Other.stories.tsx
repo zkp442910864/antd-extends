@@ -1,9 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 import {Spin} from 'antd';
 // import {} from '@storybook/addon-docs';
 
-import {jsCopy, empty, sleep, throttleDebounce, emptyArray, concurrentAjax, createdCheckVal, createdCacheAjax} from './index';
+import {
+    jsCopy, empty, sleep, throttleDebounce, emptyArray, concurrentAjax, createdCheckVal, createdCacheAjax,
+    deepProxy, toRaw,
+} from './index';
 
 export default {
     title: '工具/其它',
@@ -346,3 +349,43 @@ CreatedCacheAjax.parameters = {
     },
 };
 
+export const TDeepProxy = () => {
+
+    const deepObj = useMemo(() => {
+        return deepProxy({
+            adf: {},
+            a: 2,
+            e: 3,
+            sdf: [{e: 1}],
+        }, (...arg) => {
+            console.log('修改了');
+            console.log(arg);
+        });
+    }, []);
+
+    const click = () => {
+        deepObj.sdf.push({e: 2});
+        console.log(deepObj);
+    };
+
+    const click2 = () => {
+        console.log(toRaw(deepObj));
+    };
+
+    return (
+        <div>
+            <button onClick={click}>点击</button>
+            <button onClick={click2}>原对象</button>
+        </div>
+    );
+
+};
+TDeepProxy.storyName = '9.deepProxy/toRaw';
+TDeepProxy.parameters = {
+    docs: {
+        description: {
+            story: '深度监听, 最好不要使用解构赋值这类的操作, 会导致产生的对象变成proxy' +
+                    '<br/> 副作用会产生 _raw这个属性, 可以通过这个拿到原对象, 后面废弃了, 改用toRaw',
+        },
+    },
+};

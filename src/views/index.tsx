@@ -5,12 +5,12 @@ import {AsyncTreeSelect, AsyncSelect, MyTable, renderSelectionCellFn, spinHoc, S
 // import MyQueryForm from '@/components/MyQueryForm';
 // import MyModal, {createModalFn} from '@/components/MyModal';
 import {useStateDeep, jsCopy, useStateDeepValue} from '@/utils';
-import {deepProxy, deepProxy2} from '@/utils/modules/deepProxy';
+import {deepProxy} from '@/utils/modules/deepProxy';
 
 import {aaFn} from './test';
 import * as All from '../tsc';
 
-global.All = All;
+// global.All = All;
 
 // const testData2 = deepProxy2<any[]>([]);
 // const testData2 = deepProxy<any[]>([]);
@@ -95,7 +95,7 @@ const Home: FC = (props) => {
                 onClick={async () => {
                     const data = await aaFn();
                     console.log(data);
-                    state.list.push(...data);
+                    // state.list.push(...data);
                 }}
             >
                 123

@@ -19,16 +19,16 @@ export const useStateDeep = <T>(val: T, cb?: TCb) => {
     const [random, setRandom] = useStateAutoStop(0);
 
     const tdFun = useMemo(() => {
-        // return throttleDebounce(() => {
+        // return throttleDebounce((...arg: any) => {
         //     setRandom(Date.now() + Math.random());
         // }, 0);
-        return debounce((...arg: any) => {
-            // console.log('debounce', arg);
-            setRandom(Date.now() + Math.random());
-        }, 0);
-        // return () => {
+        // return debounce((...arg: any) => {
+        //     // console.log('debounce', arg);
         //     setRandom(Date.now() + Math.random());
-        // };
+        // }, 0);
+        return (...arg: any) => {
+            setRandom(Date.now() + Math.random());
+        };
     }, []);
 
     const proxy = useMemo(() => {
@@ -40,6 +40,37 @@ export const useStateDeep = <T>(val: T, cb?: TCb) => {
     }, []);
 
     return proxy as T & TRData;
+};
+
+/**
+ * 基本同 useStateDeep
+ */
+export const useStateDeepNew = <T>(val: T, cb?: TCb) => {
+    const [random, setRandom] = useStateAutoStop(0);
+    const deepLock = useRef(false);
+
+    const setDeepLock = useMemo(() => {
+        return (val: boolean) => {
+            deepLock.current = val;
+            !val && tdFun();
+        };
+    }, []);
+
+    const tdFun = useMemo(() => {
+        return () => {
+            if (deepLock.current) return;
+            setRandom(Date.now() + Math.random());
+        };
+    }, []);
+
+    const proxy = useMemo(() => {
+        return deepProxy(val, (...arg) => {
+            cb?.(...arg);
+            tdFun();
+        });
+    }, []);
+
+    return [proxy, setDeepLock] as [T, (val: boolean) => void];
 };
 
 

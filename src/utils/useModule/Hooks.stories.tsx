@@ -4,7 +4,7 @@ import {Spin} from 'antd';
 // import {} from '@storybook/addon-docs';
 
 import {toRaw} from '../modules';
-import {useDebounceEffect, useDebounceFn, useRequire, useStateAutoStop, useStateDeep, useStateDeepValue} from './index';
+import {useDebounceEffect, useDebounceFn, useRequire, useStateAutoStop, useStateDeep, useStateDeepValue, useStateDeepNew} from './index';
 
 export default {
     title: '工具/Hooks',
@@ -142,9 +142,32 @@ UseStateDeep.parameters = {
     docs: {
         description: {
             story: '类似于 vue3-reactive' +
-                '<br/> 有频繁触发的风险' +
-                '<br/> 深层双向绑定' +
-                '<br/> 功能是通过proxy 实现,当代理了不可代理的对象会报错(比如dom',
+                '<br/> 通过监听数据变化, 触发组件重新渲染, 来达到双向绑定' +
+                '<br/> 功能是通过proxy 实现,当代理了不可代理的对象会报错(比如dom' +
+                '<br/> 最好不要使用解构赋值这类的操作, 会导致产生的对象变成proxy' +
+                '<br/> 副作用会产生 _raw这个属性, 可以通过这个拿到原对象, 后面废弃了, 改用toRaw',
+        },
+    },
+};
+
+export const UseStateDeepNew = () => {
+    const [state, setDeepLock] = useStateDeepNew({
+        val: 0,
+    });
+
+    return (
+        <div>
+            <button onClick={() => (state.val = Math.random())}>toggle{state.val}</button>
+            <button onClick={() => {setDeepLock(true);}}>锁</button>
+            <button onClick={() => {setDeepLock(false);}}>解锁</button>
+        </div>
+    );
+};
+UseStateDeepNew.storyName = '4-2.useStateDeepNew';
+UseStateDeepNew.parameters = {
+    docs: {
+        description: {
+            story: '同 useStateDeep, 额外提供了一个锁, 锁住组件更新',
         },
     },
 };

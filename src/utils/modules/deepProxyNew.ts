@@ -1,5 +1,17 @@
 import {isCopyType} from './jsCopy';
 
+/**
+    1.做第一层代理
+    2.通过get 收集依赖
+        检测到对象非proxy，转proxy
+        TODO: 解构会触发get，把数据转成proxy
+    3.然后set 时候触发依赖
+
+
+    收集
+        用 WeakMap 关联关系
+        用 WeakMap 存回调函数
+ */
 
 const rawToProxy = new WeakMap<TData, TProxyData>();
 const proxyToRaw = new WeakMap<TProxyData, TData>();
@@ -9,7 +21,16 @@ const cbDep = new WeakMap<object, Set<TCb>>();
 const createProxy = <T extends TData>(data: T, cb?: TCb) => {
 
     const proxy = new Proxy(data, {
-
+        /**
+         * Object.keys Object.values ...
+         *  获取对象中的枚举会触发 (返回对象自身的属性名
+         */
+        // ownKeys (target) {
+        //     console.log(1);
+        //     const keys = Reflect.ownKeys(target);
+        //     // debugger;
+        //     return keys;
+        // },
         /**
          * 拦截 get
          *  判断 value 是否可以做proxy
@@ -17,6 +38,7 @@ const createProxy = <T extends TData>(data: T, cb?: TCb) => {
          *      true 判断是否存在proxy，没有就创建
          */
         get (target, key, rawProxy) {
+            // console.log(2);
             let value = Reflect.get(target, key, rawProxy);
 
             // 创建 proxy
@@ -42,19 +64,29 @@ const createProxy = <T extends TData>(data: T, cb?: TCb) => {
             // 转换回原生对象，进行赋值
             if (proxyToRaw.has(value)) {
                 value = proxyToRaw.get(value);
-            } else if (Array.isArray(value)) {
-                value.forEach((item, index) => {
+            } else if (
+                ['[object Array]', '[object Object]'].includes(Object.prototype.toString.call(value))
+            ) {
+                /**
+                 * 针对解构后的赋值
+                 * 这里只处理第一层，如果是深层次的数据结构，将会导致意外
+                 */
+                for (const key in value) {
+                    const item = value[key];
                     if (proxyToRaw.has(item)) {
                         const newItem = proxyToRaw.get(item);
-                        value[index] = newItem;
+                        value[key] = newItem;
                     }
-                });
+                }
             }
 
             const v = Reflect.set(target, key, value, raw);
-            // console.log(key);
 
-            // 加入 回调
+            /**
+             * 加入 回调
+             *  页面渲染, 会触发一遍get, 同时把需要深度监听的数据转proxy
+             *  修改时候，就会触发
+             */
             if (rawToProxy.has(value) && cb) {
                 const s = cbDep.get(value);
                 !s?.has(cb) && s?.add(cb);
@@ -124,7 +156,7 @@ const triggerCb: TtriggerCb = (target, type, obj) => {
     }
 };
 
-// window.deepProxy2 = deepProxy2;
+// window.deepProxy = deepProxy;
 // window.test = {
 //     rawToProxy,
 //     proxyToRaw,
