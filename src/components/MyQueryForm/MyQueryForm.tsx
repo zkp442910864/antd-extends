@@ -430,7 +430,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
 
     const reset = () => {
         if (loading) return;
-        state.params = jsCopy(initParams || {});
+        state.params = formatInitParams();
         // 等待最新的数据
         setTimeout(() => {
             onReset?.(jsCopy(state.params));
@@ -462,13 +462,37 @@ const MyQueryForm: FC<IProps> = forwardRef((
         );
     };
 
+    // 格式化初始化数据
+    const formatInitParams = () => {
+        const params = jsCopy(initParams || {});
+
+        const handleDate = (data: TObj, format: string, sKey: string, eKey: string) => {
+            data[sKey] = moment(data[sKey]).format(format);
+            data[eKey] = moment(data[eKey]).format(format);
+        };
+
+        config.forEach((item) => {
+            if (item.type === 'dateTimeRange') {
+                const [sKey, eKey] = item.vmodel;
+                const format = item.dateFormat || 'YYYY-MM-DD HH:mm:ss';
+                handleDate(params, format, sKey, eKey);
+            } else if (item.type === 'groupSelectDateTimeRange') {
+                const [, sKey, eKey] = item.vmodel;
+                const format = item.dateFormat || 'YYYY-MM-DD HH:mm:ss';
+                handleDate(params, format, sKey, eKey);
+            }
+        });
+
+        return params;
+    };
+
 
     // 初始化值
     useEffect(() => {
         if (externalParams) {
             state.params = externalParams;
         } else {
-            state.params = jsCopy(initParams || {});
+            state.params = formatInitParams();
         }
     }, []);
 
@@ -488,7 +512,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
                 state.params = jsCopy(newParams);
             },
             resetFormData: (newParams) => {
-                state.params = jsCopy(Object.assign({}, initParams || {}, newParams || {}));
+                state.params = jsCopy(Object.assign({}, formatInitParams(), newParams || {}));
             },
         };
 
