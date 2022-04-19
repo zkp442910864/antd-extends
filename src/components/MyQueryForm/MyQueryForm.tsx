@@ -147,7 +147,7 @@ const MyQueryForm: FC<IProps> = forwardRef((
 
             return (
                 <FormItem
-                    className="zzzz-form-item"
+                    className={`zzzz-form-item ${item.formItemClassName}`}
                     key={handle.createKey(item)}
                     label={item.label}
                     style={handle.width(item.itemWidth || '25%')}
@@ -467,12 +467,12 @@ const MyQueryForm: FC<IProps> = forwardRef((
         const params = jsCopy(initParams || {});
 
         const handleDate = (data: TObj, format: string | undefined | ((data: moment.Moment) => string), sKey: string, eKey: string) => {
-            if (typeof format === 'string') {
-                data[sKey] = moment(data[sKey]).format(format);
-                data[eKey] = moment(data[eKey]).format(format);
-            } else if (typeof format === 'function') {
+            if (typeof format === 'function') {
                 data[sKey] = format(moment(data[sKey]));
                 data[eKey] = format(moment(data[eKey]));
+            } else {
+                data[sKey] = moment(data[sKey]).format(format || 'YYYY-MM-DD HH:mm:ss');
+                data[eKey] = moment(data[eKey]).format(format || 'YYYY-MM-DD HH:mm:ss');
             }
         };
 

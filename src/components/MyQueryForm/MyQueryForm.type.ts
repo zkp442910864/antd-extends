@@ -165,6 +165,10 @@ export interface IConfigBase {
      * 控件对应的props
      */
     moduleProps?: TObj;
+    /**
+     * 扩展 FormItem 类名
+     */
+    formItemClassName?: string;
 }
 
 
