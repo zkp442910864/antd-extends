@@ -34,6 +34,15 @@ const DateTimeRange: FC<IProps> = ({
         return value;
     };
 
+    // 格式化时间
+    const handleDateFormat = (date: moment.Moment) => {
+        if (typeof dateFormat === 'string') {
+            return date.format(dateFormat);
+        }
+
+        return dateFormat(date);
+    };
+
     // 时间选择回调
     const rangePickerChange = ($event: RangePickerValue) => {
         const [start, end] = $event;
@@ -41,11 +50,11 @@ const DateTimeRange: FC<IProps> = ({
         if (!start || !end) {
             onChange?.('', '');
         } else if (isShowTime) {
-            onChange?.(start.format(dateFormat), end.format(dateFormat));
+            onChange?.(handleDateFormat(start), handleDateFormat(end));
         } else {
             start.startOf('days');
             end.endOf('days');
-            onChange?.(start.format(dateFormat), end.format(dateFormat));
+            onChange?.(handleDateFormat(start), handleDateFormat(end));
         }
     };
 
@@ -59,8 +68,8 @@ const DateTimeRange: FC<IProps> = ({
             // onChange?.(startDateTimeStr.format(dateFormat), endDateTimeStr.format(dateFormat));
             rangePickerChange([startDateTimeStr, endDateTimeStr]);
         } else if (startDateTimeStr && endDateTimeStr) {
-            const newStart = moment(startDateTimeStr).format(dateFormat);
-            const newEnd = moment(endDateTimeStr).format(dateFormat);
+            const newStart = handleDateFormat(moment(startDateTimeStr));
+            const newEnd = handleDateFormat(moment(endDateTimeStr));
             if (!(startDateTimeStr === newStart && endDateTimeStr === newEnd)) {
                 // onChange?.(moment(startDateTimeStr).format(dateFormat), moment(endDateTimeStr).format(dateFormat));
                 rangePickerChange([moment(startDateTimeStr), moment(endDateTimeStr)]);

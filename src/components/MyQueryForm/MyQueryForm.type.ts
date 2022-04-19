@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 import {IProps as NumberRangProps} from './modules/NumberRang';
 
@@ -282,7 +283,7 @@ export interface ICDateTimeRange extends IConfigBase{
     /**
       * 输出用的 时间格式
       */
-    dateFormat?: string;
+    dateFormat?: string | ((data: moment.Moment) => string);
 }
 
 export interface ICGroupSelectInput extends Omit<ICSelect, 'type' | 'vmodel' | 'width'>, Omit<ICInput, 'type' | 'vmodel' | 'width'>{

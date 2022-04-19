@@ -466,19 +466,24 @@ const MyQueryForm: FC<IProps> = forwardRef((
     const formatInitParams = () => {
         const params = jsCopy(initParams || {});
 
-        const handleDate = (data: TObj, format: string, sKey: string, eKey: string) => {
-            data[sKey] = moment(data[sKey]).format(format);
-            data[eKey] = moment(data[eKey]).format(format);
+        const handleDate = (data: TObj, format: string | undefined | ((data: moment.Moment) => string), sKey: string, eKey: string) => {
+            if (typeof format === 'string') {
+                data[sKey] = moment(data[sKey]).format(format);
+                data[eKey] = moment(data[eKey]).format(format);
+            } else if (typeof format === 'function') {
+                data[sKey] = format(moment(data[sKey]));
+                data[eKey] = format(moment(data[eKey]));
+            }
         };
 
         config.forEach((item) => {
             if (item.type === 'dateTimeRange') {
                 const [sKey, eKey] = item.vmodel;
-                const format = item.dateFormat || 'YYYY-MM-DD HH:mm:ss';
+                const format = item.dateFormat;
                 handleDate(params, format, sKey, eKey);
             } else if (item.type === 'groupSelectDateTimeRange') {
                 const [, sKey, eKey] = item.vmodel;
-                const format = item.dateFormat || 'YYYY-MM-DD HH:mm:ss';
+                const format = item.dateFormat;
                 handleDate(params, format, sKey, eKey);
             }
         });

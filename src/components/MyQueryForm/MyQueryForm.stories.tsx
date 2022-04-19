@@ -63,7 +63,10 @@ Primary.args = {
             clearable: true,
             label: '时间选择',
             showFormat: 'YYYY-MM-DD HH:mm',
-            dateFormat: 'YYYY-MM-DD HH:mm:ss',
+            dateFormat: (date) => {
+                console.log(date);
+                return date.utc().format();
+            },
         },
         {
             type: 'groupSelectInput',

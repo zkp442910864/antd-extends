@@ -25,7 +25,7 @@ export interface IProps extends Omit<RangePickerProps, 'onChange'> {
     /**
      * 输出用的 时间格式
      */
-    dateFormat?: string;
+    dateFormat?: string | ((data: moment.Moment) => string);
     /**
      * 展示用的 时间格式
      *
