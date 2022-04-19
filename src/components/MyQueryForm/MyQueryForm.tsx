@@ -467,6 +467,8 @@ const MyQueryForm: FC<IProps> = forwardRef((
         const params = jsCopy(initParams || {});
 
         const handleDate = (data: TObj, format: string | undefined | ((data: moment.Moment) => string), sKey: string, eKey: string) => {
+            if (empty(data[sKey]) || empty(data[eKey])) return;
+
             if (typeof format === 'function') {
                 data[sKey] = format(moment(data[sKey]));
                 data[eKey] = format(moment(data[eKey]));
