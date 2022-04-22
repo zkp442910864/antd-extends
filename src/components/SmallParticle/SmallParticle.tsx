@@ -49,6 +49,30 @@ const depTrigget = (item: TObj) => {
     }
 };
 
+// 收集函数
+const mapGetValue = new WeakMap<TObj, {[key: string]: () => any}>();
+const mapSetValue = new WeakMap<TObj, {[key: string]: (val: any) => void}>();
+
+// 代理
+const proxyItem = (item: TObj, key: string, getValue: () => any, setValue: (val: any) => void) => {
+
+
+    mapGetValue.set(item, Object.assign(mapGetValue.get(item) || {}, {[key]: getValue}));
+    mapSetValue.set(item, Object.assign(mapSetValue.get(item) || {}, {[key]: setValue}));
+
+    const result = Reflect.defineProperty(item, key, {
+        get () {
+            return mapGetValue.get(item)?.[key]?.();
+        },
+        set (newVal) {
+            // debugger;
+            mapSetValue.get(item)?.[key]?.(newVal);
+        },
+    });
+
+    return result;
+};
+
 // 组件
 const SmallParticle: FC<IProps> = (props) => {
 
@@ -75,30 +99,22 @@ const SmallParticle: FC<IProps> = (props) => {
         };
 
         // 未销毁的时候，使用 useStateDeepValue
-        let getValue = () => {
+        const getValue = () => {
             return state.value;
         };
-        let setValue = (newValue: any) => {
-            state.value = newValue;
+        const setValue = (val: any) => {
+            // console.log(getValue());
+            if (getValue() === val) return;
+            state.value = val;
+            // 触发
+            depTrigget(item);
         };
 
         // 收集
         depAdd(item, update);
 
         // 数据拦截
-        Object.defineProperty(item, vmodel, {
-            get () {
-                return getValue();
-            },
-            set (val) {
-                if (getValue() === val) return;
-                setValue(val);
-                // console.log(dep);
-                // 触发
-                depTrigget(item);
-            },
-        });
-
+        proxyItem(item, vmodel, getValue, setValue);
 
         return () => {
             // 移除
@@ -106,12 +122,13 @@ const SmallParticle: FC<IProps> = (props) => {
 
             // 销毁后，利用闭包处理
             let value = state.value;
-            getValue = () => {
+            const getValue = () => {
                 return value;
             };
-            setValue = (newValue: any) => {
+            const setValue = (newValue: any) => {
                 value = newValue;
             };
+            proxyItem(item, vmodel, getValue, setValue);
         };
     }, [item]);
 

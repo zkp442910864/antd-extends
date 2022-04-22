@@ -167,7 +167,9 @@ UseStateDeepNew.storyName = '4-2.useStateDeepNew';
 UseStateDeepNew.parameters = {
     docs: {
         description: {
-            story: '同 useStateDeep, 额外提供了一个锁, 锁住组件更新',
+            story: '同 useStateDeep, 额外提供了一个锁, 锁住组件更新' +
+                '<br/> 主要针对大数据量操作，频繁触发更新的场景' +
+                '<br/> 比如 arr.push(...[]); Object.assign(data, newData)',
         },
     },
 };

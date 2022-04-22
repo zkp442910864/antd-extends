@@ -74,6 +74,7 @@ export const Demo1 = () => {
             });
             list.value = res.Countries;
             state.other = res.Template;
+            console.log(list.value);
 
         };
 
@@ -254,11 +255,11 @@ export const Demo1 = () => {
                                 },
                             },
                         ]}
-                        disabledPage={true}
+                        // disabledPage={true}
                         expandIconColumnIndex={0}
                         // list={list.value}
                         list={list.value}
-                        rowKey="Id"
+                        // rowKey="Id"
                         scroll={{y: maxHeight - 100}}
                     />
                 )}
@@ -480,11 +481,11 @@ export const Demo2 = () => {
                                 },
                             },
                         ]}
-                        disabledPage={true}
+                        // disabledPage={true}
                         expandIconColumnIndex={0}
                         // list={list.value}
                         list={list.value}
-                        rowKey="Id"
+                        // rowKey="Id"
                         scroll={{y: maxHeight - 100}}
                     />
                 )}
