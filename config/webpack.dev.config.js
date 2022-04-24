@@ -1,5 +1,15 @@
+/*
+ * @Author: your name
+ * @Date: 2022-04-11 10:04:09
+ * @LastEditTime: 2022-04-24 17:30:22
+ * @LastEditors: your name
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \antd-extends\config\webpack.dev.config.js
+ */
 const webpack = require('webpack');
+const path = require('path');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const mockerApi = require('mocker-api');
 
 module.exports = (env, argv, config) => {
     const {
@@ -16,6 +26,8 @@ module.exports = (env, argv, config) => {
         isDev,
         getFullUrl,
     } = config;
+
+    const disabledMock = env.mock === 'no';
 
     return {
         plugins: [
@@ -48,6 +60,19 @@ module.exports = (env, argv, config) => {
             hotOnly: true,
             stats: 'errors-only',
             quiet: true,
+            before: disabledMock ? undefined : (app) => {
+                mockerApi(app, path.resolve(__dirname, '../mock/index'), {
+                    // 代理地址
+                    // proxy: {
+                    //     '/api/repos/*': 'https://api.github.com/',
+                    // },
+                    // 重写目标网址路径。对象键将用作RegEx来匹配路径。
+                    // pathRewrite: {
+                    //     '^/api/repos/': '/repos/',
+                    // },
+                    changeHost: true,
+                });
+            },
         },
     };
 };

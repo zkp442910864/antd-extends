@@ -23,5 +23,6 @@ tsconfig.build.json
 README.md
 .env
 docs
+mock
 .nojekyll
 .github

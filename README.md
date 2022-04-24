@@ -28,6 +28,20 @@
 - [官方文档](https://storybook.js.org/docs/react/writing-stories/introduction#using-args)
 - [命令配置项](https://storybook.js.org/docs/react/api/cli-options)
 
+### mock
+- [mocker-api](https://www.npmjs.com/package/mocker-api)
+- [mocker-api 中文文档](https://github.com/jaywcjlove/mocker-api/blob/HEAD/README-zh.md)
+- [ts mock](https://zhuanlan.zhihu.com/p/72412792)
+- [ts-json-schema-generator ts转jsonSchema](https://github.com/vega/ts-json-schema-generator)
+- [JSON Schema 中文文档](https://json-schema.apifox.cn/)
+- [使用ajv校验json-schema数据格式](https://juejin.cn/post/6916498595441016845)
+```bash
+    npm i mocker-api -D
+
+    # 转换ts 文件类型
+    npm i json-schema-faker ts-json-schema-generator -D
+```
+
 
 ### 执行命令
 ```
