@@ -5,7 +5,12 @@ import Preview from './Preview.jsx';
 import msw from './msw';
 
 // mock: Initialize MSW
-initialize();
+initialize({
+    serviceWorker: {
+        url: './mockServiceWorker.js',
+        options: null,
+    },
+});
 
 // console.log(mockData);
 export const parameters = {
