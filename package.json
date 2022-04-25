@@ -21,8 +21,8 @@
     "copy:less": "copyfiles -u 1 src/**/*.scoped.less lib/",
     "copy:types": "copyfiles -u 1 src/types/**/* types/",
     "jest": "jest --passWithNoTests",
-    "storybook": "start-storybook -p 6006 -s mock",
-    "build:docs": "build-storybook -o ./docs -s mock"
+    "storybook": "start-storybook -p 6006 -s public",
+    "build:docs": "build-storybook -o ./docs -s public"
   },
   "main": "dist/index.js",
   "module": "es/tsc.js",

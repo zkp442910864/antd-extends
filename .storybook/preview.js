@@ -7,8 +7,7 @@ import msw from './msw';
 // mock: Initialize MSW
 initialize({
     serviceWorker: {
-        url: './mockServiceWorker.js',
-        options: null,
+        url: `${top.location.pathname}mockServiceWorker.js`,
     },
 });
 
