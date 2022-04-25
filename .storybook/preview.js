@@ -1,7 +1,13 @@
 /* eslint-disable react/react-in-jsx-scope */
+import {initialize, mswDecorator} from 'msw-storybook-addon';
+
 import Preview from './Preview.jsx';
+import msw from './msw';
 
+// mock: Initialize MSW
+initialize();
 
+// console.log(mockData);
 export const parameters = {
     // actions: {argTypesRegex: '^on[A-Z].*'},
     // https://storybook.js.org/docs/react/essentials/controls
@@ -32,10 +38,13 @@ export const parameters = {
     backgrounds: {
         disable: true,
     },
+    msw,
 };
 
 // 包装
+// Provide the MSW addon decorator globally
 export const decorators = [
+    mswDecorator,
     (Story) => (
         <Preview>
             <Story />

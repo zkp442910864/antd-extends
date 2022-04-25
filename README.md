@@ -42,6 +42,9 @@
     npm i json-schema-faker ts-json-schema-generator -D
 ```
 
+### storybook mock
+- [msw-storybook-addon](https://storybook.js.org/addons/msw-storybook-addon)
+
 
 ### 执行命令
 ```
