@@ -307,8 +307,9 @@ const MyTable: FC<IProps> = forwardRef((
     const getList = useCallback(async (page?: number, pageSize?: number, sort?: TOrderBy, outData?: TObj) => {
 
         if (!requestApi || !getFormData) {
-            console.error('缺少 requestApi 或 getFormData');
-            return;
+            // console.error('缺少 requestApi 或 getFormData');
+            // return;
+            throw new Error('缺少 requestApi 或 getFormData');
         }
 
         const {params, emptyOrderBy} = setFn.jointParamsData(page, pageSize, sort, outData);
@@ -346,7 +347,7 @@ const MyTable: FC<IProps> = forwardRef((
             return errData;
         });
 
-        const resData: TResData = res && res.data || errData;
+        let resData: TResData = res && res.data || errData;
 
         if (!emptyOrderBy) {
             resData.orderBy = params.orderBy;
@@ -357,6 +358,11 @@ const MyTable: FC<IProps> = forwardRef((
         state.resData = resData;
 
         setFn.setLoad(false);
+
+        if (!resData.list.length && resData.pagination.current > 1 && resData.pagination.total) {
+            resData = await getList(1);
+        }
+
         return resData;
     }, []);
 
