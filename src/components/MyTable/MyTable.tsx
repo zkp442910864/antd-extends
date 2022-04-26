@@ -359,6 +359,7 @@ const MyTable: FC<IProps> = forwardRef((
 
         setFn.setLoad(false);
 
+        // 主要处理不点搜索，直接翻页的情况
         if (!resData.list.length && resData.pagination.current > 1 && resData.pagination.total) {
             resData = await getList(1);
         }
