@@ -1,7 +1,7 @@
 /* eslint-disable no-extra-boolean-cast */
 import React, {FC, forwardRef, FunctionComponent} from 'react';
 
-import {IProps, IProps2, TObj, TClassType} from './Exhibit.type';
+import {IProps, IProps2, TObj} from './Exhibit.type';
 
 export * from './Exhibit.type';
 
@@ -16,19 +16,22 @@ const packComponent = <T extends TObj = TObj>(Com: any) => {
 
     const NewCom = forwardRef((props: IProps, ref) => {
         const {
-            rIf = true,
-            rShow = true,
+            rIf,
+            rShow,
             style = {},
             ...otherProps
-        } = props;
+        } = props as IProps & {style: TObj};
 
-        if (!rShow) {
+        const curRIf = Reflect.has(props, 'rIf') ? !!rIf : true;
+        const curRShow = Reflect.has(props, 'rShow') ? !!rShow : true;
+
+        if (!curRShow) {
             style.display = 'none';
         }
 
         return (
             <>
-                {!!rIf ? <Com {...otherProps} ref={ref} style={style} /> : ''}
+                {!!curRIf ? <Com {...otherProps} ref={ref} style={style} /> : ''}
             </>
         );
     });
@@ -37,11 +40,14 @@ const packComponent = <T extends TObj = TObj>(Com: any) => {
 };
 
 const Exhibit: FC<IProps2> & {packComponent: typeof packComponent} = (props: IProps2) => {
-    const {rIf = true, children} = props;
+    const {rIf, children} = props;
+
+    const curRIf = Reflect.has(props, 'rIf') ? !!rIf : true;
+
 
     return (
         <>
-            {!!rIf ? children : ''}
+            {curRIf ? children : ''}
         </>
     );
 };

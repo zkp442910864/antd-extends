@@ -7,14 +7,22 @@ export type TObj = {[key: string]: any};
 export type TClassType = (props: any, context?: any) => ReactElement<any, any>;
 
 export interface IProps {
-    rIf?: true | boolean;
-    rShow?: true | boolean;
-    style?: {[key: string]: any};
+    /**
+     * 不传时，默认true
+     */
+    rIf?: true | boolean | null;
+    /**
+     * 不传时，默认true
+     */
+    rShow?: true | boolean | null;
     children?: any;
 }
 
 export interface IProps2 {
-    rIf?: true | boolean;
+    /**
+     * 不传时，默认true
+     */
+    rIf?: true | boolean | null;
     children?: any;
 }
 
