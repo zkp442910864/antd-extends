@@ -28,6 +28,12 @@
 - [官方文档](https://storybook.js.org/docs/react/writing-stories/introduction#using-args)
 - [命令配置项](https://storybook.js.org/docs/react/api/cli-options)
 
+### jest 单元测试
+- 查找节点时，使用中文好像有问题
+- [jest 文档](https://jestjs.io/zh-Hans/)
+- [@testing-library/react 文档](https://testing-library.com/docs/react-testing-library/intro/)
+- [资料1](https://segmentfault.com/a/1190000039710016)
+
 ### mock
 - [mocker-api](https://www.npmjs.com/package/mocker-api)
 - [mocker-api 中文文档](https://github.com/jaywcjlove/mocker-api/blob/HEAD/README-zh.md)

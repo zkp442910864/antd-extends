@@ -1,4 +1,6 @@
-module.exports = {
+import type {Config} from '@jest/types';
+
+const config: Config.InitialOptions = {
     setupFilesAfterEnv: ['@testing-library/jest-dom'],
     testEnvironment: 'jsdom',
     // 告诉jest去哪里找模块资源，同webpack中的modules
@@ -7,7 +9,10 @@ module.exports = {
         'node_modules',
     ],
     // 测试用例目录
-    testRegex: '(/__tests__/.*.test)\\.[jt]sx?$',
+    testRegex: [
+        '(/__tests__/.*.test)\\.[jt]sx?$',
+        // 'Exhibit/__tests__/index.test.tsx',
+    ],
     // 别名设置
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
@@ -22,3 +27,5 @@ module.exports = {
         },
     },
 };
+
+export default config;

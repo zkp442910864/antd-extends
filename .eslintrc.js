@@ -19,6 +19,9 @@ module.exports = {
     ],
     globals: {
         JSX: true,
+        describe: false,
+        it: false,
+        expect: false,
         // IOBJ: true,
     },
     // parserOptions: {
