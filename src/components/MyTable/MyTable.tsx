@@ -35,7 +35,7 @@ const NewAffix: FC<{id?: string, lockChildrenFn?: boolean} & AffixProps> = (prop
     );
 };
 
-const MyTable: FC<IProps> = forwardRef((
+const MyTable: FC<IProps<any>> = forwardRef((
     {
         size = globalConfig.tableSize,
         sortDirections = globalConfig.tableSortDirections,
@@ -75,7 +75,7 @@ const MyTable: FC<IProps> = forwardRef((
         loading,
         // tableData,
         ...otherProps
-    }: IProps,
+    }: IProps<any>,
     ref,
 ) => {
 

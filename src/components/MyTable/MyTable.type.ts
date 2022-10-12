@@ -97,7 +97,7 @@ export type TableRef = {
     getAjaxData: () => {params: TObj, emptyOrderBy: boolean};
 };
 
-export interface IProps<T = TObj> extends Omit<TableProps<T>, 'columns'> {
+export interface IProps<T> extends Omit<TableProps<T>, 'columns'> {
     /**
      * 列配置
      */
@@ -199,7 +199,7 @@ export interface IProps<T = TObj> extends Omit<TableProps<T>, 'columns'> {
      *
      * 不传，会进行默认设置
      */
-    rowKey?: string | ((item: TObj) => string);
+    rowKey?: string | ((item: T) => string);
     /**
      * div 盒子样式
      */

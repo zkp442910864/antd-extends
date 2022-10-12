@@ -118,7 +118,7 @@ export const deepProxy = <T extends TRData = any>(
  * @param {*} cb 设置时候触发
  * @returns proxy
  */
-export const deepValue = <T extends TData = TData>(val: T, cb?: TCb2) => {
+export const deepValue = <T>(val: T, cb?: TCb2) => {
     const obj = {value: val};
     const proxy = new Proxy(obj, {
         set (target, key, value, raw) {
@@ -138,7 +138,7 @@ export const deepValue = <T extends TData = TData>(val: T, cb?: TCb2) => {
 
 type TObj = {[key: string | number | symbol]: any};
 type TArr = any[];
-type TData = TObj | TArr;
+export type TData = TObj | TArr;
 export type TRData = {
     /**
      * 代理标识

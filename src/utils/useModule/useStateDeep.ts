@@ -32,7 +32,7 @@ export const useStateDeep = <T>(val: T, cb?: TCb) => {
     }, []);
 
     const proxy = useMemo(() => {
-        return deepProxy(val, (...arg) => {
+        return deepProxy(val as any, (...arg) => {
             cb?.(...arg);
             tdFun(...arg);
             // window.requestAnimationFrame(tdFun);
@@ -64,7 +64,7 @@ export const useStateDeepNew = <T>(val: T, cb?: TCb) => {
     }, []);
 
     const proxy = useMemo(() => {
-        return deepProxy(val, (...arg) => {
+        return deepProxy(val as any, (...arg) => {
             cb?.(...arg);
             tdFun();
         });
