@@ -1,7 +1,13 @@
 // const path = require('path');
 
 const presets = [
-    '@babel/preset-env',
+    [
+        '@babel/preset-env',
+        {
+            // loose: true,
+            modules: false,
+        },
+    ],
     '@babel/preset-react',
     '@babel/preset-typescript',
 ];
