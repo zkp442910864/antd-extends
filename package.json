@@ -8,10 +8,6 @@
         "url": "https://github.com/zkp442910864/antd-extends"
     },
     "homepage": "https://github.com/zkp442910864/antd-extends",
-    "sideEffects": [
-        "*.css",
-        "*.less"
-    ],
     "scripts": {
         "start": "webpack serve --env CUSTOM_NODE_ENV=development --mode=development --config config/index.js",
         "start:no-mock": "webpack serve --env CUSTOM_NODE_ENV=development mock=no --mode=development --config config/index.js",
