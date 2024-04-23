@@ -5,6 +5,6 @@
 
 const other = require('./modules/other');
 
-module.exports = {
+export default {
     ...other,
 };

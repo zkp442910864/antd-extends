@@ -10,10 +10,7 @@ module.exports = {
         es6: true,
         amd: true,
     },
-    extends: [
-        'plugin:react/recommended',
-        '@zzzz-/eslint-config-test',
-    ],
+    extends: ['plugin:react/recommended', '@zzzz-/eslint-config-test', 'plugin:storybook/recommended'],
     plugins: [
         'react',
     ],
