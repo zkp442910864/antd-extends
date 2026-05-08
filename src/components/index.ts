@@ -1,4 +1,5 @@
 export {default as Test} from './Test';
+export {default as TestButton} from './TestButton';
 
 export {default as MyQueryForm} from './MyQueryForm';
 export {default as MyTable, renderSelectionCellFn} from './MyTable';
